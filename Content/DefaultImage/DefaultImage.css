@@ -1,0 +1,40 @@
+﻿.DefaultBackground {
+    background: url('../../icons/interanet.png')no-repeat center fixed;
+    width: 100%;
+    height: 100%;
+    padding: 1px 1px 1px 100px;
+    position: fixed;
+    z-index: -1;
+    min-height: 100%;
+    min-width: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+#date_time {
+    margin-right: 10%;
+    margin-top: 1%;
+}
+.Required111 {
+    border-left: 5px solid red;
+}
+#btnLogin {
+    background-color: #56575b;
+    font-weight: bold;
+    color: white;
+}
+.LoginBackground {
+    background: url('../../icons/interanet.png')no-repeat center center fixed;
+    width: 100%;
+    height: 100%;
+    padding: 1px 1px 1px 100px;
+    position: fixed;
+    z-index: -1;
+    min-height: 100%;
+    min-width: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
