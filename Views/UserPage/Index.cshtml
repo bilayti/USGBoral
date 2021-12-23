@@ -1,0 +1,2763 @@
+﻿@model IEnumerable<NewApp.Models.CardCodeBind>
+@using NewApp.Models;
+
+@{
+    ViewBag.Title = "Home";
+    Layout = null;
+}
+
+@{var listStatus = new List<System.Web.UI.WebControls.ListItem>
+{
+ new System.Web.UI.WebControls.ListItem { Text = "Credit Hold", Value="1" },
+  new System.Web.UI.WebControls.ListItem { Text = "Released&Accepted", Value="2" },
+  new System.Web.UI.WebControls.ListItem { Text = "Order In Warehouse", Value="3" },
+  new System.Web.UI.WebControls.ListItem { Text = "Pending For Invoicing", Value="4" },
+  new System.Web.UI.WebControls.ListItem { Text = "Invoiced", Value="5" }
+};
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User :: Home Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="application/x-javascript">
+        addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); }
+    </script>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link href="~/css/style.css" rel="stylesheet" />
+    <!-- Nav CSS -->
+    <link href="~/css/custom.css" rel="stylesheet" />
+    <!-- Graph CSS -->
+    <link href="~/css/lines.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <!----webfonts--->
+    <!-- jQuery -->
+    <script src="~/Content/jquery-1.9.1.js"></script>
+    <link href="~/DataTable/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/DataTable/js/jquery.dataTables.min.js"></script>
+    <link href='//fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900' rel='stylesheet' type='text/css' />
+    <script type="text/javascript">
+        function date_time(id) {
+            date = new Date;
+            year = date.getFullYear();
+            month = date.getMonth();
+            months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+            d = date.getDate();
+            day = date.getDay();
+            days = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+            h = date.getHours();
+            if (h < 10) {
+                h = "0" + h;
+            }
+            m = date.getMinutes();
+            if (m < 10) {
+                m = "0" + m;
+            }
+            s = date.getSeconds();
+            if (s < 10) {
+                s = "0" + s;
+            }
+            result = '' + days[day] + ' ' + months[month] + ' ' + d + ' ' + year + ' ' + h + ':' + m + ':' + s + ' ' + 'IST';
+            document.getElementById(id).innerHTML = result;
+            setTimeout('date_time("' + id + '");', '1000');
+            return true;
+        }
+    </script>
+    <style type="text/css">
+        #date_time {
+            margin-right: 10%;
+            margin-top: 1%;
+        }
+    </style>
+    <style type="text/css">
+        .MarginTop1 {
+            margin-top: 1%;
+        }
+
+        .CurrentActiveTab {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+        }
+
+        .table tbody tr {
+            background: #fff;
+        }
+
+        .height12 {
+            height: 20px;
+        }
+
+        .ReportTable {
+            width: 100% !important;
+        }
+
+            .ReportTable td {
+                width: 15% !important;
+            }
+
+            .ReportTable th {
+                width: 21% !important;
+            }
+
+        .table td, .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+            padding: 5px !important;
+        }
+
+        .align {
+            text-align: right;
+            float: right;
+        }
+
+        .graphs {
+            padding: 0px !important;
+        }
+
+        .MarqueStyle {
+            background: #009639;
+            color: white;
+            font-size: medium;
+            font-family: Verdana;
+            height: 28px !important;
+            padding: 5px 5px 5px 5px;
+        }
+    </style>
+    <script type="text/javascript">
+        //<![CDATA[</span />
+
+        var clicked = false;
+        function CheckBrowser() {
+            if (clicked == false) {
+                //Browser closed
+            }
+            else {
+                //redirected
+                clicked = false;
+            }
+        }
+
+        function bodyUnload() {
+
+            if (clicked == false)//browser is closed
+            {
+                var request = GetRequest();
+
+                request.open("POST", "../LogOut.aspx", false);
+                request.send();
+                alert('This is close');
+            }
+        }
+        function GetRequest() {
+            var xmlhttp;
+            if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            }
+            else {// code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            return xmlhttp;
+        }
+    </script>
+</head>
+<body onunload="bodyUnload();" onclick="clicked=true;">
+    <div id="wrapper">
+        <div style="display: none; position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 1000; background: rgba(0,0,0,0.5)" id="loader">
+            <img alt="" src="~/fonts/ajax-loader-6.gif" style="top: 50%; left: 50%; position: absolute; text-align: center;" />
+        </div>
+        <nav class="top1 navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; height: auto; background-color: white; margin-top: -5px; left: 0; top: 0;">
+            <div class="navbar-header" style="margin-top: -12px; padding-top: -11px;">
+                <a class="navbar-brand" href="https://www.usgboral.com/en_in/" target="_blank">
+                    @*USG BORAL*@
+                    <img src="~/icons/rsz_usg_boral_logo.png" />
+                </a>
+
+            </div>
+            <div class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle avatar" data-toggle="dropdown" />
+                        @*<div class="label">
+                                <span style="font-size: 10px;  color: black;" id="date_time"></span>
+                                <script type="text/javascript">
+                                    window.onload = date_time('date_time');
+                                </script>
+                            </div>*@
+                        <div class="label label-primary">@ViewBag.UserName</div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="~/UserChangePassword.aspx" /><span class="btn btn-xs btn-primary">CHANGE PASSWORD</span>
+                    </li>
+                    <li class="dropdown">
+
+                        <a href='#' id="aLogout" /><span class="label label-danger">LOGOUT</span>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="graphs">
+            <div id="header" class="MarqueStyle">
+                <marquee onmouseover="this.stop();" onmouseout="this.start();" behavior="alternate" width="100%">
+                    <marquee onmouseover="this.stop();" onmouseout="this.start();" behavior="alternate" width="100%">
+                        Total Outstanding :- <span id="spnMarqueeTotal">@ViewBag.TotalOut</span> :
+                        Overdue Outstanding :- <span id="spnMarqueeOverdue">@ViewBag.OverdueOut</span>
+                    </marquee>
+                </marquee>
+            </div>
+            <div class="md">
+                @*Account Information Area   *@
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-8">
+                            <div>
+                                <div class="col-md-4">
+                                    <h4 style="font-family: bookman old style; font-weight: bold;">Account Information</h4>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                            </div>
+
+                            <div class="row MarginTop1">
+
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                    </div>
+                                    <div class="col-md-8">
+                                    </div>
+                                </div>
+                                <div class="col-md-6"></div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <!---->
+                            <div class="row MarginTop1">
+                                <div class="col-md-12">
+                                    <div class="col-md-2" style="margin-left: 0%">
+                                        <label class="control-label">Customer&nbsp; name</label>
+                                    </div>
+                                    <div class="col-md-10">
+
+                                        @{NewApp.Models.CardCodeBind _Rb = new NewApp.Models.CardCodeBind();}
+                                        @*@Html.DropDownList("ddlCustomerName", new SelectList(_Rb.CardCodeBindMethod(), "CardCode", "CardName"), "- Select Customer Name -", new { @class = "form-control" }, new { @onchange="CallChangefunc(this.value)" }))*@
+                                        @Html.DropDownList("ddlCustomerName", new SelectList(_Rb.CardCodeBindMethod(1), "CardCode", "CardName"), "- Select Customer Name -", new { @class = "form-control", @onchange = "OnChangeFill();" })
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="col-md-4">
+                                    </div>
+                                    <div class="col-md-8">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- One row -->
+                            <div class="row MarginTop1" style="pointer-events: none;">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Address</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtAddress", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Sales&nbsp;Person</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtSalesPerson", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Two row -->
+
+                            <div class="row MarginTop1" style="pointer-events: none;">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Address2</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtAddress2", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Contact person</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtContract", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row MarginTop1" style="pointer-events: none;">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">City</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtCity", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Phone</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtPhone", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row MarginTop1" style="pointer-events: none;">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Post Code</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtPostCode", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Fax</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtFax", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row MarginTop1" style="pointer-events: none;">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">State</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtState", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Email</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtEmail", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row MarginTop1" style="pointer-events: none;">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Country</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtCountry", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Last Payment Date</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtLastPaymentOn", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row MarginTop1" style="pointer-events: none;">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Area</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtArea", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">PAN</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtPAN", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row MarginTop1" style="pointer-events: none;">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Territory</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtTerritory", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">TIN</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtTIN", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row MarginTop1">
+                                <div class="col-md-6" style="pointer-events: none;">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Credit Days</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.TextBox("txtCreditDate", null, new { @class = "form-control" })
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label">GSTIN No.</label>
+                                    </div>
+                                    <div class="col-md-8" style="pointer-events: none;">
+                                        @Html.TextBox("txtGSTINNo", null, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row MarginTop1">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="control-label"></label>
+                                    </div>
+                                    <div class="col-md-8" style="pointer-events: none;">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-2">
+                                    </div>
+                                    <div class="col-md-10" id="div">
+                                        <input type="radio" id="radio_1" class="rbl" name="report" value="1" checked="checked" />Individual
+                                        <input type="radio" id="radio_2" name="report" value="2" />Linked
+                                        <input type="radio" id="radio_3" name="report" value="3" />All
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* <div class="row MarginTop1" style="pointer-events: none;">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="control-label">Warehouse</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            @Html.TextBox("txtWarehouse", null, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                        </div>
+                                        <div class="col-md-8">
+                                        </div>
+                                    </div>
+                                </div>*@
+                        </div>
+                        <div class="col-md-4">
+                            <div class="col-md-12">
+                                <h4 style="font-family: bookman old style; font-weight: bold;">Over Due Details</h4>
+                            </div>
+                            <div class="row MarginTop1" style="pointer-events: none;">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Balance</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextBox("txtBalance", null, new { @class = "form-control align" })
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                            </div>
+
+                            @*<div class="row MarginTop1">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label class="control-label">Before Overdue Days</label>
+                                        </div>
+                                        <div class="col-md-6" style="pointer-events: none;">
+                                            @Html.TextBox("txtOverdue15Less", null, new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-2">
+                                            <h6><a data-toggle="modal" data-target="#myModal" href="#" style="color: red" onclick="BindOverLessThan15();">(View)</a></h6>
+                                        </div>
+                                    </div>
+                                </div>*@
+
+                            <div class="row MarginTop1">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Due Within 30 Days</label>
+                                    </div>
+                                    <div class="col-md-6" style="pointer-events: none;">
+                                        @Html.TextBox("txtOverdue15Gre", null, new { @class = "form-control align" })
+                                    </div>
+                                    <div class="col-md-2">
+                                        <h6><a href='#' style="color: red" data-toggle="modal" data-target="#myModal2" onclick="BindOverDueGre15();">(View)</a></h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row MarginTop1" style="pointer-events: none;">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="color: #337ab7">Overdue Days</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.TextBox("txtOverDueDays", null, new { @class = "form-control align" })
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                            </div>
+
+                            <div class="row MarginTop1">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="color: #337ab7">Expected Payment</label>
+                                    </div>
+                                    <div class="col-md-6" style="pointer-events: none;">
+                                        @Html.TextBox("txtExpPayment", null, new { @class = "form-control align" })
+                                    </div>
+                                    <div class="col-md-2">
+                                        <h6><a href='#' style="color: red" data-toggle="modal" data-target="#myModal3" onclick="BindOverExpPay();">(View)</a></h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row MarginTop1">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="color: #337ab7">Partially unpaid invoice</label>
+                                    </div>
+                                    <div class="col-md-6" style="pointer-events: none;">
+                                        @Html.TextBox("txtShortFall", null, new { @class = "form-control align" })
+                                    </div>
+                                    <div class="col-md-2">
+                                        <h6><a href='#' style="color: red" data-toggle="modal" data-target="#myModal5" onclick="BindPartiallyUnpaidInvoice();">(View)</a></h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="col-md-12">
+                                    <h4 style="font-family: bookman old style; font-weight: bold; color: black">Health Checkup</h4>
+                                </div>
+                            </div>
+                            <div class="row MarginTop1">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="color: #337ab7">Order Value</label>
+                                    </div>
+                                    <div class="col-md-6" style="pointer-events: none;">
+                                        @Html.TextBox("txtCeiling", null, new { @class = "form-control align" })
+                                    </div>
+                                    <div class="col-md-2">
+                                        <h6><a href='#' style="color: red" data-toggle="modal" data-target="#myModal4" onclick="BindOverOrderValue();">(View)</a></h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row MarginTop1">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="color: #337ab7">Overdue days</label>
+                                    </div>
+                                    <div class="col-md-6" style="pointer-events: none;">
+                                        @Html.TextBox("txtOverduesdays", null, new { @class = "form-control align" })
+                                    </div>
+                                    <div class="col-md-2">
+                                        @*<h6><a href='@Url.Action("Index", "FrmCustomerCheckOut")' style="color:red">(View)</a></h6>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row MarginTop1">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="color: #337ab7">Total overdue</label>
+                                    </div>
+                                    <div class="col-md-6" style="pointer-events: none;">
+                                        @Html.TextBox("txtTotalOverdue", null, new { @class = "form-control align" })
+                                    </div>
+                                    <div class="col-md-2">
+                                        @*<h6><a href='@Url.Action("Index", "FrmCustomerCheckOut")' style="color:red">(View)</a></h6>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row MarginTop1">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="color: #337ab7">Unadjusted credit</label>
+                                    </div>
+                                    <div class="col-md-6" style="pointer-events: none;">
+                                        @Html.TextBox("txtCerditBalance", null, new { @class = "form-control align" })
+                                    </div>
+                                    <div class="col-md-2">
+                                        @*<h6><a href='@Url.Action("Index", "FrmCustomerCheckOut")' style="color:red">(View)</a></h6>*@
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container MarginTop1" style="margin-left: 10px; scrollbar-base-color: Background">
+                <ul class="nav nav-tabs" id="MyUl">
+                    <li class="active" id="liMenu1" onclick="CurrentActive(this)"><a href="#" style="font-size: small">Aging Report</a></li>
+                    <li id="liMenu2" onclick="CurrentActive(this)"><a href="#" id="" style="font-size: small">Pending Order Report</a></li>
+                    <li id="liMenu3" onclick="CurrentActive(this)"><a href="#" id="" style="font-size: small">Item Purchase</a></li>
+                    <li id="liMenu4" onclick="CurrentActive(this)"><a href="#" style="font-size: small">Invoice Report</a></li>
+                    <li id="liMenu5" onclick="CurrentActive(this)"><a href="#" id="" style="font-size: small">Account Statement</a></li>
+                    <li id="liMenu6" onclick="CurrentActive(this)"><a href="#" id="" style="font-size: small">Payment Summary</a></li>
+                    <li id="liMenu7" onclick="CurrentActive(this)"><a href="#" style="font-size: small">Credit Note Report</a></li>
+                    @*<li id="liMenu8" onclick="CurrentActive(this)"><a href="#" id="" style="font-size: small">Feedback</a></li>*@
+                    @*<li id="liMenu9" onclick="CurrentActive(this)"><a href="#" style="font-size: small">Account Statement Old</a></li>*@
+                    @*<li id="liMenu10" onclick="CurrentActive(this)"><a href="#" style="font-size: small">Collection Summary</a></li>*@
+                </ul>
+                <div class="col-md-12" style="margin-bottom: 10px;" id="divReportsAgeing">
+                    <div class="col-md-4">
+                        <button type="button" id="btnFindReport1" class="btn btn-xs btn-primary" onclick="GetReports()" style="width: 80px; margin-left: 10px">Get Data</button>
+                        <button type="button" id="exportexcel101" class="btn btn-xs btn-primary" onclick="GetReportExcel()" style="width: 90px; margin-left: 10px">Get To Excel</button>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-4">
+                    </div>
+                    <div class="col-md-4">
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 10px; display: none" id="divReports">
+                    <div class="col-md-1">
+                        <label class="control-label">From Date</label>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" id="txtFromDT" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="control-label">To Date</label>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" id="txtToDT" class="form-control" />
+                    </div>
+                    <button type="button" id="btnFindReport" class="btn btn-xs btn-primary" onclick="GetReports()" style="width: 80px; margin-left: 10px">Get Data</button>
+                    <button type="button" id="exportexcel10" class="btn btn-xs btn-primary" onclick="GetReportExcel()" style="width: 90px; margin-left: 10px">Get To Excel</button>
+
+                </div>
+                <div id="divPenOrder" style="display: none">
+                    <div class="col-md-12">
+                        <div class="col-md-10">
+                            <label class="control-label">Order Received --> Credit Hold --> Released&Accepted --> Order In Warehouse --> Pending For Invoicing --> Invoiced</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-1">
+                            <label class="control-label">From Date</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" id="txtFromDatePen" class="form-control" />
+                        </div>
+                        <div class="col-md-1">
+                            <label class="control-label">To Date</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" id="txtToDatePen" class="form-control" />
+                        </div>
+                        <div class="col-md-1">
+                            <label class="control-label">Status</label>
+                        </div>
+                        <div class="col-md-2">
+                            @Html.DropDownList("ddlUserType", new SelectList(listStatus, "Value", "Text"), "- Select Status -", new { @class = "form-control" })
+                        </div>
+                        <button type="button" id="btnFindPndOrdReport" class="btn btn-xs btn-primary" onclick="GetReports()" style="width: 80px; margin-left: 10px">Get Data</button>
+                        <button type="button" id="exportexcel11" class="btn btn-xs btn-primary" onclick="GetReportExcel()" style="width: 90px; margin-left: 10px">Get To Excel</button>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 10px; display: none" id="divAccountStatements">
+                    <div class="col-md-1">
+                        <label class="control-label">From Date</label>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" id="txtFromDTStmt" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="control-label">To Date</label>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" id="txtToDTStmt" class="form-control" />
+                    </div>
+                    <button type="button" id="btnFindReportStmt" class="btn btn-xs btn-primary" onclick="GetReports()" style="width: 80px; margin-left: 10px">Get Data</button>
+                    <button type="button" id="exportexcelStmt" class="btn btn-xs btn-primary" onclick="GetReportExcel()" style="width: 90px; margin-left: 10px">Get To Excel</button>
+                    <button type="button" id="exportPDFStmt" class="btn btn-xs btn-primary" onclick="GetAccountStatementPDF()" style="width: 190px; margin-left: 10px">Download Account Statement</button>
+
+                </div>
+            </div>
+
+            @*//Aging--*@
+            <div class="table-responsive" id="divReport" style="margin-left: 23px; display: none">
+                <table class="table table-bordered ReportTable" id="tblMyReports">
+                    <thead id="">
+                        <tr style='background: rgba(158, 158, 158, 0.13)'>
+                            <th style="width: 15%">Customer Code</th>
+                            <th style="width: 15%">Customer Name</th>
+                            <th style="width: 15%">Parent Child</th>
+                            <th style="width: 15%">Location</th>
+                            <th style="width: 10%">Current Balance</th>
+                            <th style="width: 10%">0-30 Days</th>
+                            <th style="width: 10%">31-60 Days</th>
+                            <th style="width: 10%">61-90 Days</th>
+                            <th style="width: 10%">91-120 Days</th>
+                            <th style="width: 10%">121+ Days</th>
+                            <th style="width: 10%"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodymydata"></tbody>
+                </table>
+                <table></table>
+            </div>
+
+            @*//Pending Order Report*@
+            <div class="table-responsive" id="divMyReportsPendingOrderReport" style="margin-left: 23px; display: none;">
+                <table class="table table-bordered ReportTable" id="tblMyReportsPendingOrderReport">
+                    <thead id="">
+                        <tr style='background: rgba(158, 158, 158, 0.13)'>
+                            <th>Order No.</th>
+                            <th>Card Code</th>
+                            <th>Card Name</th>
+                            <th>Location</th>
+                            <th>Doc Total</th>
+                            <th>Status</th>
+                            <th>TranspoterName</th>
+                            <th>LR No.</th>
+                            <th>Veh No.</th>
+                        </tr>
+                    </thead>
+                    <tbody id=""></tbody>
+                </table>
+            </div>
+
+            @*//ItemPurchase----------------*@
+            <div class="table-responsive" id="divMyReportsItemPurchase" style="margin-left: 23px; display: none;">
+                <table class="table table-bordered ReportTable" id="tblMyReportsItemPurchase">
+                    <thead id="">
+                        <tr style='background: rgba(158, 158, 158, 0.13)'>
+                            <th>Item Group Name</th>
+                            <th>Total Qty.</th>
+                            <th>Total Amount</th>
+                            <th>Sub Group</th>
+                            <th>Item</th>
+                        </tr>
+                    </thead>
+                    <tbody id=""></tbody>
+                </table>
+            </div>
+
+            @*//Invoice ----------------*@
+            <div class="table-responsive" id="divMyReportsInvoice" style="margin-left: 23px; display: none;">
+                <table class="table table-bordered ReportTable" id="tblMyReportsInvoice">
+                    <thead id="">
+                        <tr style='background: rgba(158, 158, 158, 0.13)'>
+                            <th>Invoice No.</th>
+                            <th>Customer Code</th>
+                            <th>Customer Name</th>
+                            <th>Invoice Date</th>
+                            <th>Invoice Total</th>
+                            <th>Location</th>
+                            <th>Report</th>
+                        </tr>
+                    </thead>
+                    <tbody id=""></tbody>
+                </table>
+            </div>
+
+            @*//Account Statement ----------------*@
+            <div class="table-responsive" id="divMyReportsAccount" style="margin-left: 23px; display: none;">
+                <table class="table table-bordered ReportTable" id="tblMyReportsAccount">
+                    <thead id="">
+                        <tr style='background: rgba(158, 158, 158, 0.13)'>
+                            <th>Customer Name</th>
+                            <th>Customer Code</th>
+                            <th>Location</th>
+                            <th>Trans Type</th>
+                            <th>Payment/Invoice Date</th>
+                            <th>Series</th>
+                            <th>Payment/Invoice No.</th>
+                            <th>Remarks</th>
+                            <th>DEBIT</th>
+                            <th>CREDIT</th>
+                            <th>RunningTotal</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id=""></tbody>
+                </table>
+            </div>
+
+            @*//Payment Summary---------------*@
+            <div class="table-responsive" id="divMyReportsBank" style="margin-left: 23px; display: none;">
+                <table class="table table-bordered ReportTable" id="tblMyReportsBank">
+                    <thead id="">
+                        <tr style='background: rgba(158, 158, 158, 0.13)'>
+                            <th>Payment No.</th>
+                            <th>Payment Date</th>
+                            <th>Description</th>
+
+                            <th>Payment Type</th>
+                            <th>Cheque No.</th>
+                            <th>Cheque Date</th>
+                            <th>Drawee Bank Name</th>
+                            <th>Chequee Amount</th>
+                            <th>Report</th>
+                        </tr>
+                    </thead>
+                    <tbody id=""></tbody>
+                </table>
+            </div>
+
+            @*//Credit Note--------------*@
+            <div class="table-responsive" id="divMyReportsCredit" style="margin-left: 23px; display: none;">
+                <table class="table table-bordered ReportTable" id="tblMyReportsCredit">
+                    <thead id="">
+                        <tr style='background: rgba(158, 158, 158, 0.13)'>
+                            <th>Customer Name</th>
+                            <th>Customer Code</th>
+                            <th>Credit Note No.</th>
+                            <th>Credit Note Date</th>
+                            @*<th>Ware House</th>*@
+                            <th>Item Code</th>
+                            <th>Item Description</th>
+                            <th>Quantity</th>
+                            <th>C.N Amount</th>
+                            <th>Location</th>
+                            <th>Report</th>
+                        </tr>
+                    </thead>
+                    <tbody id=""></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Overdue 15 <= days -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="width: 180%; margin-left: -180px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">View Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <table class="table table-bordered" id="tblMyDataList">
+                            <thead id="theadmydata1">
+                                <tr style='background: black'>
+                                    <th>Document No.</th>
+                                    <th>Document Date</th>
+                                    <th>Due Date</th>
+                                    <th>Remark</th>
+                                    <th>Balance Amount</th>
+                                    <th>Days</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodymydata1"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Overdue >Due Within 30 Days -->
+    <div class="modal fade" id="myModal2" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="width: 180%; margin-left: -180px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">View Details / Due Within 30 Days</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <table class="table table-bordered" id="tblMyDataList2">
+                            <thead id="theadmydata2">
+                                <tr style='background: black'>
+                                    <th>Invoice No.</th>
+                                    <th>Invoice Date</th>
+                                    <th>Due Date</th>
+                                    <th>Invoice Amount</th>
+                                    <th>Balance Amount</th>
+                                    <th>Days</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodymydata2"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Expected Payment -->
+    <div class="modal fade" id="myModal3" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="width: 180%; margin-left: -180px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">View Details / Expected Payment</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <table class="table table-bordered" id="tblMyDataList3">
+                            <thead id="theadmydata3">
+                                <tr style='background: black'>
+                                    <th>Invoice No.</th>
+                                    <th>Invoice Date</th>
+                                    <th>Due Date</th>
+                                    <th>Invoice Amount</th>
+                                    <th>Balance Amount</th>
+                                    <th>Days</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodymydata3"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Order Value -->
+    <div class="modal fade" id="myModal4" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="width: 180%; margin-left: -180px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">View Details / Order Value</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <table class="table table-bordered" id="tblMyDataList4">
+                            <thead id="theadmydata4">
+                                <tr style='background: black'>
+                                    <th>Order No.</th>
+                                    <th>Order Date</th>
+                                    <th>Due Date</th>
+                                    <th>Order Amount</th>
+                                    <th>Balance Amount</th>
+                                    <th>Days</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodymydata4"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model partially unpaid invoice -->
+    <div class="modal fade" id="myModal5" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="width: 180%; margin-left: -180px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">View Details / Partially unpaid invoice</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <table class="table table-bordered" id="tblMyDataList5">
+                            <thead id="theadmydata5">
+                                <tr style='background: black'>
+                                    <th>Invoice No.</th>
+                                    <th>Invoice Date</th>
+                                    <th>Due Date</th>
+                                    <th>Invoice Amount</th>
+                                    <th>Paid Amount</th>
+                                    <th>Balance Amount</th>
+                                    <th>Days</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodymydata5"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Pop-Up For Aging Report Row Wise Details -->
+    <div class="modal fade" id="myModalARD" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" style="width: 180%; margin-left: -180px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">View Details / Aging</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <table class="table table-bordered" id="tblMyDataListAgingDetail">
+                            <thead id="theadmydataARD">
+                                <tr style='background: black'>
+                                    @*<th>Document No.</th>*@
+                                    <th>Invoice Date</th>
+                                    <th>Invoice Due Date</th>
+                                    <th>Invoice No.</th>
+                                    <th>Invoice Value</th>
+                                    <th>Balance Amount</th>
+                                    <th>Days</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodymydataARD"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Pop-Up For Item SUb Group Row Wise Details -->
+    <div class="modal fade" id="myModalItmSubGrp" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" style="width: 180%; margin-left: -180px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">View Details / SubGroup</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <table class="table table-bordered" id="tblMyDataListSubGroup">
+                            <thead id="theadmydataISGroup">
+                                <tr style='background: black'>
+                                    <th>Item Sub Group</th>
+                                    <th>Total Quantity</th>
+                                    <th>Total Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="theadmydataISGroup"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Pop-Up For Item Details Group Row Wise Details -->
+    <div class="modal fade" id="myModalItem" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" style="width: 180%; margin-left: -180px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">View Details / Item</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <table class="table table-bordered" id="tblMyDataListItem">
+                            <thead id="theadmydataItemDetails">
+                                <tr style='background: black'>
+                                    <th>Invoice No.</th>
+                                    <th>Customer Code</th>
+                                    <th>Customer Name</th>
+                                    <th>Item Code</th>
+                                    <th>Item Description</th>
+                                    <th>Quantity</th>
+                                    <th>Item Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="theadmydataItemDetails"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*<script src="~/js/jquery.min.js"></script>*@
+
+    <script src="~/DataTable/js/jquery.dataTables.min.js"></script>
+
+    <script src="~/Content/tableExport.js"></script>
+    @*Main file which does export feature *@
+    <script src="~/Content/jquery.base64.js"></script>
+    @*Main file which does convert the content to base64  *@
+    <script src="~/Content/html2canvas.js"></script>
+    @*Main file which does export to image feature *@
+    <script src="~/Content/jspdf/libs/base64.js"></script>
+    @*Main file which does  convert the content to base64 for pdf *@
+    <script src="~/Content/jspdf/libs/sprintf.js"></script>
+    @*Main file which does export feature for pdf *@
+    <script src="~/Content/jspdf/jspdf.js"></script>
+    @*Main file which does export feature for pdf *@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#aLogout').click(function () {
+                window.location.href = '../LogOutPage.aspx';
+            });
+            GetUserReportAuthorization();
+        });
+
+        // Hide Report Tab According to User Authorization
+        function GetUserReportAuthorization() {
+            var chkAging = '';
+            var chkPending = '';
+            var chkItem = '';
+            var chkInvoice = '';
+            var chkAccount = '';
+            var chkCollection = '';
+            var chkCredit = '';
+            debugger;
+            $.ajax({
+                url: "/UserPage/GetUserReportAuthorization",
+                type: "POST",
+                data: JSON.stringify({}),
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.length > 0) {
+                        chkAging = data[0].Aging;
+                        chkPending = data[0].PendingOrder;
+                        chkItem = data[0].ItemPurchase;
+                        chkInvoice = data[0].Invoice;
+                        chkAccount = data[0].AccountStatement;
+                        chkCollection = data[0].CollectionSummary;
+                        chkCredit = data[0].CreditNote;
+                        if (chkAging == "N") {
+                            alert(chkAging);
+                            $('#liMenu1').hide();
+                        }
+                        if (chkPending == "N") {
+                            $('#liMenu2').hide();
+                        }
+                        if (chkItem == "N") {
+                            $('#liMenu3').hide();
+                        }
+                        if (chkInvoice == "N") {
+                            $('#liMenu4').hide();
+                        }
+                        if (chkAccount == "N") {
+                            $('#liMenu5').hide();
+                        }
+                        if (chkCollection == "N") {
+                            $('#liMenu6').hide();
+                        }
+                        if (chkCredit == "N") {
+                            $('#liMenu7').hide();
+                        }
+                    }
+                    else {
+                        //alert("No Record Found");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        // Hide & Show Tab Menu
+        var _CurrentActive = 'liMenu1';
+        function CurrentActive(currTab) {
+            $('#divMyReportsPendingOrderReport').hide();
+            $('#divMyReportsItemPurchase').hide();
+            $('#divMyReportsAccount').hide();
+            $('#divMyReportsInvoice').hide();
+            $('#divMyReportsCredit').hide();
+            $('#divMyReportsBank').hide();
+            $('#divMyReportsAccount').hide();
+            $('#divReport').hide();
+            _CurrentActive = currTab.id;
+            var MyMenuLength = $('#MyUl li').length;
+            for (var i = 1; i <= MyMenuLength; i++) {
+                $('#liMenu' + i + '').removeClass('active')
+                $('#liMenu' + i + '').removeClass('CurrentActiveTab')
+            }
+            $('#' + currTab.id + '').addClass('CurrentActiveTab')
+            if (currTab.id == 'liMenu1') {
+                $('#divReportsAgeing').show();
+                $('#divReports').hide();
+                $('#divPenOrder').hide();
+                $('#divAccountStatements').hide();
+            }
+            else if (currTab.id == 'liMenu2') {
+                $('#divReports').hide();
+                $('#divReportsAgeing').hide();
+                $('#divPenOrder').show();
+                $('#divAccountStatements').hide();
+            }
+            else if (currTab.id == 'liMenu5') {
+                $('#divReports').hide();
+                $('#divReportsAgeing').hide();
+                $('#divPenOrder').hide();
+                $('#divAccountStatements').show();
+            }
+            else {
+                $('#divReports').show();
+                $('#divReportsAgeing').hide();
+                $('#divPenOrder').hide();
+                $('#divAccountStatements').hide();
+            }
+
+            //$('#tblMyReports').empty();
+            //$('#theadmydata').empty();
+            //$('#tbodymydata').empty();
+            $('#txtFromDT').val('');
+            $('#txtToDT').val('');
+        }
+
+        //Find Customer Name
+        function OnChangeFill() {
+            var CardCode = $('#ddlCustomerName').val();
+            $.ajax({
+                url: "/UserPage/CustomerOnChange",
+                type: "POST",
+                data: JSON.stringify({ 'CardCode': CardCode }),
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.length > 0) {
+                        $('#txtAddress').val(data[0].Address)
+                        $('#txtAddress2').val(data[0].City)
+                        $('#txtCity').val(data[0].City)
+                        $('#txtPostCode').val(data[0].ZipCode)
+                        $('#txtState').val(data[0].State1)
+                        $('#txtCountry').val(data[0].Country)
+                        $('#txtCity').val(data[0].Area)
+                        $('#txtTerritory').val(data[0].Territory)
+                        $('#txtSalesPerson').val(data[0].SlpCode)
+                        $('#txtContract').val(data[0].CntctPrsn)
+                        $('#txtPhone').val(data[0].Phone1)
+                        $('#txtFax').val(data[0].Fax)
+                        $('#txtEmail').val(data[0].E_Mail)
+                        $('#txtLastPaymentOn').val(data[0].LastPaymentOn)
+                        $('#txtPAN').val(data[0].PAN)
+                        $('#txtTIN').val(data[0].TIN)
+                        $('#txtBalance').val(data[0].BalanceSys)
+                        $('#txtOverdue15Less').val(data[0].OverDueLess15)
+                        $('#txtOverdue15Gre').val(data[0].OverDueGre15)
+                        $('#txtOverDueDays').val(data[0].OverDueDays)
+                        $('#txtExpPayment').val(data[0].ExpPayment)
+                        $('#txtShortFall').val(data[0].Shortfall)
+                        $('#txtCeiling').val(data[0].ordervalue)
+                        $('#txtWarehouse').val(data[0].Warehouse)
+                        $('#txtCreditLimit').val(data[0].CreditLimit)
+                        $('#txtCreditDate').val(data[0].CreditDate)
+                        $('#txtGSTINNo').val(data[0].GSTINNo)
+                        $('#txtOverduesdays').val(data[0].MaxOverduedays)
+                        $('#txtTotalOverdue').val(data[0].Totaloverdue)
+                        $('#txtCerditBalance').val(data[0].Cerditbalance)
+
+                        Clear();
+                    }
+                    else {
+                        alert("No Record Found");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        // Comman function for Clear Data
+        function Clear() {
+            $('#divMyReportsCredit').hide();
+            $('#divMyReportsBank').hide();
+            $('#divMyReportsInvoice').hide();
+            $('#divMyReportsAccount').hide();
+            $('#divMyReportsItemPurchase').hide();
+            $('#divMyReportsPendingOrderReport').hide();
+            $('#divReport').hide();
+
+            $('#txtFromDT').val('');
+            $('#txtToDT').val('');
+            $('#txtFromDTStmt').val('');
+            $('#txtToDTStmt').val('');
+            $('#txtFromDatePen').val('');
+            $('#txtToDatePen').val('');
+            $('#ddlUserType').val('');
+        }
+
+        // Comman function for Reports
+        function GetReports() {
+            // $('#tblMyReports').empty();
+            //$('#theadmydata').empty();
+            $('#tbodymydata').empty();
+            if (_CurrentActive == 'liMenu1') {
+                AgingReport();
+            }
+            else if (_CurrentActive == 'liMenu2') {
+                PendingOrderReport();
+            }
+            else if (_CurrentActive == 'liMenu3') {
+                ItemPurchase();
+            }
+            else if (_CurrentActive == 'liMenu4') {
+                InvoiceReport();
+            }
+            else if (_CurrentActive == 'liMenu5') {
+                AccountStatement();
+            }
+            else if (_CurrentActive == 'liMenu6') {
+                BankReceiptReport();
+            }
+            else if (_CurrentActive == 'liMenu7') {
+                CreditNoteReport();
+            }
+            else if (_CurrentActive == 'liMenu8') {
+                FeedBack();
+            }
+            else if (_CurrentActive == 'liMenu9') {
+                AccountStatementOld();
+            }
+        }
+
+        //Report in Excel Emport GetReportExcel
+        function GetReportExcel() {
+            $('#tbodymydata').empty();
+            if (_CurrentActive == 'liMenu1') {
+                AgingReportExcel();
+            }
+            else if (_CurrentActive == 'liMenu2') {
+                PendingOrderReportExcel();
+            }
+            else if (_CurrentActive == 'liMenu3') {
+                ItemPurchaseExcel();
+            }
+            else if (_CurrentActive == 'liMenu4') {
+                InvoiceReportExcel();
+            }
+            else if (_CurrentActive == 'liMenu5') {
+                AccountStatementReportExcel();
+
+            }
+            else if (_CurrentActive == 'liMenu6') {
+                BankReceiptReportExcel();
+            }
+            else if (_CurrentActive == 'liMenu7') {
+                CreditNoteReportExcel();
+            }
+            else if (_CurrentActive == 'liMenu8') {
+                FeedBack();
+            }
+            else if (_CurrentActive == 'liMenu9') {
+                AccountStatementOld();
+            }
+        }
+
+        //Ageing Report in Excel
+        function AgingReportExcel() {
+            var CardCode = $('#ddlCustomerName').val();
+            var radiovalue = '';
+            if ($("#radio_1").is(":checked")) {
+                radiovalue = 1;
+            }
+            else if ($("#radio_2").is(":checked")) {
+                radiovalue = 2;
+            }
+            else
+                radiovalue = 3;
+            $.ajax({
+                url: "/UserPage/AgingReportExcel",
+                type: "POST",
+                data: JSON.stringify({ 'sCardCode': CardCode, 'sradio': radiovalue }), //
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    var tblhtml = "<table border='1'><thead><tr><th>Cardcode</th><th>Customer Name</th><th>Current Balance</th><th>0-30 Days</th><th>31-60 Days</th><th>61-90 Days</th><th>91-120 Days</th><th>120+Days</th><th>Parent_Child</th><th>Location</th></tr></thead>";
+                    tblhtml = tblhtml + "<tbody>";
+                    for (index = 0; index < data.length; index++) {
+                        tblhtml = tblhtml + "<tr><td>" + data[index].CardCode + "</td><td>" + data[index].CustomerName + "</td><td>" + data[index].CurrentBalance + "</td><td>" + data[index].Days_030 + "</td><td>" + data[index].Days_3160 + "</td><td>" + data[index].Days_6190 + "</td><td>" + data[index].Days_91120 + "</td><td>" + data[index].Days_121 + "</td> <td>" + data[index].Parent_Child + "</td><td>" + data[index].sAgingLocation + "</td></tr>";
+                    }
+                    tblhtml = tblhtml + "</tbody></table>";
+                    console.log(tblhtml);
+
+                    var ua = window.navigator.userAgent;
+                    var msie = ua.indexOf("MSIE");
+                    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+                    {
+                        txtArea1.document.open("txt/html", "replace");
+                        txtArea1.document.write(tblhtml);
+                        txtArea1.document.close();
+                        txtArea1.focus();
+                        sa = txtArea1.document.execCommand("SaveAs", false, "Aging Report.xls");
+
+
+                    }
+                    else                 //other browser not tested on IE 11
+                        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tblhtml));
+
+                    return (sa);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        //Pending Order Report in Excel
+        function PendingOrderReportExcel() {
+            var CardCode = $('#ddlCustomerName').val();
+            var Status = $('#ddlUserType').val();
+            var FromDT = $('#txtFromDatePen').val();
+            var ToDT = $('#txtToDatePen').val();
+            var radiovalue = '';
+            if ($("#radio_1").is(":checked")) {
+                radiovalue = 1;
+            }
+            else if ($("#radio_2").is(":checked")) {
+                radiovalue = 2;
+            }
+            else
+                radiovalue = 3;
+            $.ajax({
+                url: "/UserPage/PendingOrderReportExcel",
+                type: "POST",
+                data: JSON.stringify({ 'sCardCode': CardCode, 'sFromDate': FromDT, 'sToDate': ToDT, "sStatus": Status, 'sradio': radiovalue }), //
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    var tblhtml = "<table border='1'><thead><tr><th>Order No.</th><th>Card Code</th><th>Card Name</th><th>Location</th><th>Doc Total</th><th>Status</th><th>Transporter Name</th><th>LR No.</th><th>Veh. No.</th></tr></thead>";
+                    tblhtml = tblhtml + "<tbody>";
+                    for (index = 0; index < data.length; index++) {
+                        tblhtml = tblhtml + "<tr><td>" + data[index].Document_No_Pen + "</td><td>" + data[index].CardCode_Pen + "</td><td>" + data[index].CardName_Pen + "</td><td>" + data[index].Location + "</td><td>" + data[index].DocTotal + "</td><td>" + data[index].Status + "</td><td>" + data[index].TranspoterName + "</td><td>" + data[index].LR_NO + "</td> <td>" + data[index].Veh_No + "</td></tr>";
+                    }
+                    tblhtml = tblhtml + "</tbody></table>";
+                    console.log(tblhtml);
+
+                    var ua = window.navigator.userAgent;
+                    var msie = ua.indexOf("MSIE");
+                    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+                    {
+                        txtArea1.document.open("txt/html", "replace");
+                        txtArea1.document.write(tblhtml);
+                        txtArea1.document.close();
+                        txtArea1.focus();
+                        sa = txtArea1.document.execCommand("SaveAs", false, "Pending Order Report.xls");
+
+
+                    }
+                    else                 //other browser not tested on IE 11
+                        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tblhtml));
+
+                    return (sa);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        //Item Purchase Excel
+        function ItemPurchaseExcel() {
+            var CardCode = $('#ddlCustomerName').val();
+            var FromDT = $('#txtFromDT').val();
+            var ToDT = $('#txtToDT').val();
+            var radiovalue = '';
+            if ($("#radio_1").is(":checked")) {
+                radiovalue = 1;
+            }
+            else if ($("#radio_2").is(":checked")) {
+                radiovalue = 2;
+            }
+            else
+                radiovalue = 3;
+            $.ajax({
+                url: "/UserPage/ItemPurchaseExcel",
+                type: "POST",
+                data: JSON.stringify({ 'sCardCode': CardCode, 'sFromDate': FromDT, 'sToDate': ToDT, 'sradio': radiovalue }),
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    var tblhtml = "<table border='1'><thead><tr><th>Item Group Name</th><th>Total Qty.</th><th>Total Amount</th></tr></thead>";
+                    tblhtml = tblhtml + "<tbody>";
+                    for (index = 0; index < data.length; index++) {
+                        tblhtml = tblhtml + "<tr><td>" + data[index].ItemGroup_ITEM + "</td><td>" + data[index].Quantity_ITEM + "</td><td>" + data[index].DocTotal_ITEM + "</td></tr>";
+                    }
+                    tblhtml = tblhtml + "</tbody></table>";
+                    console.log(tblhtml);
+
+                    var ua = window.navigator.userAgent;
+                    var msie = ua.indexOf("MSIE");
+                    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+                    {
+                        txtArea1.document.open("txt/html", "replace");
+                        txtArea1.document.write(tblhtml);
+                        txtArea1.document.close();
+                        txtArea1.focus();
+                        sa = txtArea1.document.execCommand("SaveAs", false, "Item Purchase Report.xls");
+
+
+                    }
+                    else                 //other browser not tested on IE 11
+                        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tblhtml));
+
+                    return (sa);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        //Invoice Report Excel
+        function InvoiceReportExcel() {
+            var CardCode = $('#ddlCustomerName').val();
+            var FromDT = $('#txtFromDT').val();
+            var ToDT = $('#txtToDT').val();
+            var radiovalue = '';
+            if ($("#radio_1").is(":checked")) {
+                radiovalue = 1;
+            }
+            else if ($("#radio_2").is(":checked")) {
+                radiovalue = 2;
+            }
+            else
+                radiovalue = 3;
+            $.ajax({
+                url: "/UserPage/InvoiceReportExcel",
+                type: "POST",
+                data: JSON.stringify({ 'sCardCode': CardCode, 'sFromDate': FromDT, 'sToDate': ToDT, 'sradio': radiovalue }),
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    var tblhtml = "<table border='1'><thead><tr><th>Document No.</th><th>Customer Code</th><th>Customer Name</th><th>Document Date</th><th>Invoice Total</th><th>Location</th></tr></thead>";
+                    tblhtml = tblhtml + "<tbody>";
+                    for (index = 0; index < data.length; index++) {
+                        tblhtml = tblhtml + "<tr><td>" + data[index].Document_ENo_IN + "</td><td>" + data[index].CardCode_IN + "</td><td>" + data[index].CardName_IN + "</td><td>" + data[index].DocDate_C1 + "</td><td>" + data[index].Total + "</td><td>" + data[index].Location + "</td></tr>";
+                    }
+                    tblhtml = tblhtml + "</tbody></table>";
+                    console.log(tblhtml);
+
+                    var ua = window.navigator.userAgent;
+                    var msie = ua.indexOf("MSIE");
+                    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+                    {
+                        txtArea1.document.open("txt/html", "replace");
+                        txtArea1.document.write(tblhtml);
+                        txtArea1.document.close();
+                        txtArea1.focus();
+                        sa = txtArea1.document.execCommand("SaveAs", false, "Invoice Report.xls");
+
+
+                    }
+                    else                 //other browser not tested on IE 11
+                        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tblhtml));
+
+                    return (sa);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+
+                }
+            });
+        }
+
+        //Account Statement Report Excel
+        function AccountStatementReportExcel() {
+            var CardCode = $('#ddlCustomerName').val();
+            var FromDT = $('#txtFromDTStmt').val();
+            var ToDT = $('#txtToDTStmt').val();
+            var radiovalue = '';
+            if ($("#radio_1").is(":checked")) {
+                radiovalue = 1;
+            }
+            else if ($("#radio_2").is(":checked")) {
+                radiovalue = 2;
+            }
+            else
+                radiovalue = 3;
+            $.ajax({
+                url: "/UserPage/AccountStatementReportExcel",
+                type: "POST",
+                data: JSON.stringify({ 'sCardCode': CardCode, 'sFromDate': FromDT, 'sToDate': ToDT, 'sradio': radiovalue }),
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    var tblhtml = "<table border='1'><thead><tr><th>Customer Name</th><th>Customer Code</th><th>Location</th><th>Trans Type</th><th>Payment/Invoice Date</th><th>Series</th><th>Payment/Invoice No.</th><th>Remarks</th><th>Debit</th><th>Credit</th><th>Running Total</th></tr></thead>";
+                    tblhtml = tblhtml + "<tbody>";
+                    for (index = 0; index < data.length; index++) {
+                        tblhtml = tblhtml + "<tr><td>" + data[index].CardName + "</td><td>" + data[index].CardCode + "</td><td>" + data[index].Location + "</td><td>" + data[index].TransType + "</td><td>" + data[index].REFDATE + "</td><td>" + data[index].Series + "</td><td>" + data[index].baseRef + "</td><td>" + data[index].LINEMEMO + "</td><td>" + data[index].DEBIT + "</td><td>" + data[index].CREDIT + "</td><td>" + data[index].RunningTotal + "</td></tr>";
+                    }
+                    tblhtml = tblhtml + "</tbody></table>";
+                    console.log(tblhtml);
+
+                    var ua = window.navigator.userAgent;
+                    var msie = ua.indexOf("MSIE");
+                    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+                    {
+                        txtArea1.document.open("txt/html", "replace");
+                        txtArea1.document.write(tblhtml);
+                        txtArea1.document.close();
+                        txtArea1.focus();
+                        sa = txtArea1.document.execCommand("SaveAs", false, "Account Statement Report.xls");
+
+
+                    }
+                    else                 //other browser not tested on IE 11
+                        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tblhtml));
+
+                    return (sa);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+        function AccountStatementReportPDF() {
+            var CardCode = $('#ddlCustomerName').val();
+            var FromDT = $('#txtFromDTStmt').val();
+            var ToDT = $('#txtToDTStmt').val();
+            var radiovalue = '';
+            if ($("#radio_1").is(":checked")) {
+                radiovalue = 1;
+            }
+            else if ($("#radio_2").is(":checked")) {
+                radiovalue = 2;
+            }
+            else
+                radiovalue = 3;
+            $.ajax({
+                url: "/UserPage/AccountStatementReportPDF",
+                type: "POST",
+                data: JSON.stringify({ 'sCardCode': CardCode, 'sFromDate': FromDT, 'sToDate': ToDT, 'sradio': radiovalue }),
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    var tblhtml = "<table border='1'><thead><tr><th>Customer Name</th><th>Customer Code</th><th>Location</th><th>Trans Type</th><th>Payment/Invoice Date</th><th>Series</th><th>Payment/Invoice No.</th><th>Remarks</th><th>Debit</th><th>Credit</th></tr></thead>";
+                    tblhtml = tblhtml + "<tbody>";
+                    for (index = 0; index < data.length; index++) {
+                        tblhtml = tblhtml + "<tr><td>" + data[index].CardName + "</td><td>" + data[index].CardCode + "</td><td>" + data[index].Location + "</td><td>" + data[index].TransType + "</td><td>" + data[index].REFDATE + "</td><td>" + data[index].Series + "</td><td>" + data[index].baseRef + "</td><td>" + data[index].LINEMEMO + "</td><td>" + data[index].DEBIT + "</td><td>" + data[index].CREDIT + "</td></tr>";
+                    }
+                    tblhtml = tblhtml + "</tbody></table>";
+                    console.log(tblhtml);
+
+                    var ua = window.navigator.userAgent;
+                    var msie = ua.indexOf("MSIE");
+                    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+                    {
+                        txtArea1.document.open("txt/html", "replace");
+                        txtArea1.document.write(tblhtml);
+                        txtArea1.document.close();
+                        txtArea1.focus();
+                        sa = txtArea1.document.execCommand("SaveAs", false, "Account Statement Report.xls");
+
+
+                    }
+                    else                 //other browser not tested on IE 11
+                        sa = window.open('data:application/pdf,' + encodeURIComponent(tblhtml));
+
+                    return (sa);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+        //Bank Receipt Excel
+        function BankReceiptReportExcel() {
+            var CardCode = $('#ddlCustomerName').val();
+            var FromDT = $('#txtFromDT').val();
+            var ToDT = $('#txtToDT').val();
+            var radiovalue = '';
+            if ($("#radio_1").is(":checked")) {
+                radiovalue = 1;
+            }
+            else if ($("#radio_2").is(":checked")) {
+                radiovalue = 2;
+            }
+            else
+                radiovalue = 3;
+            $.ajax({
+                url: "/UserPage/BankReceiptReportExcel",
+                type: "POST",
+                data: JSON.stringify({ 'sCardCode': CardCode, 'sFromDate': FromDT, 'sToDate': ToDT, 'sradio': radiovalue }),
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    var tblhtml = "<table border='1'><thead><tr><th>Payment No.</th><th>Payment Date</th><th>Description</th><th>Payment Type</th><th>Cheque No.</th><th>Cheque Date</th><th>Drawee Bank Name</th><th>Cheque Amount</th></tr></thead>";
+                    tblhtml = tblhtml + "<tbody>";
+                    for (index = 0; index < data.length; index++) {
+                        tblhtml = tblhtml + "<tr><td>" + data[index].Document_No1 + "</td><td>" + data[index].Posting_Date1 + "</td><td>" + data[index].Discription1 + "</td><td>" + data[index].PaymentType + "</td><td>" + data[index].ChequeNo + "</td><td>" + data[index].ChequeDate + "</td><td>" + data[index].DriaweeBankName + "</td><td>" + data[index].CheckAmount + "</td></tr>";
+                    }
+                    tblhtml = tblhtml + "</tbody></table>";
+                    console.log(tblhtml);
+
+                    var ua = window.navigator.userAgent;
+                    var msie = ua.indexOf("MSIE");
+                    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+                    {
+                        txtArea1.document.open("txt/html", "replace");
+                        txtArea1.document.write(tblhtml);
+                        txtArea1.document.close();
+                        txtArea1.focus();
+                        sa = txtArea1.document.execCommand("SaveAs", false, "Payment Summary Report.xls");
+
+
+                    }
+                    else                 //other browser not tested on IE 11
+                        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tblhtml));
+
+                    return (sa);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        //Credit Note Excel
+        function CreditNoteReportExcel() {
+            var CardCode = $('#ddlCustomerName').val();
+            var FromDT = $('#txtFromDT').val();
+            var ToDT = $('#txtToDT').val();
+            var radiovalue = '';
+            if ($("#radio_1").is(":checked")) {
+                radiovalue = 1;
+            }
+            else if ($("#radio_2").is(":checked")) {
+                radiovalue = 2;
+            }
+            else
+                radiovalue = 3;
+            $.ajax({
+                url: "/UserPage/CreditNoteReportExcel",
+                type: "POST",
+                data: JSON.stringify({ 'sCardCode': CardCode, 'sFromDate': FromDT, 'sToDate': ToDT, 'sradio': radiovalue }),
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    var tblhtml = "<table border='1'><thead><tr><th>Customer Code</th><th>Customer Name</th><th>Credit Note No.</th><th>Credit Note Date</th><th>Item Code</th><th>Item Description</th><th>Quantity</th><th>C.N Amount</th><th>Location</th></tr></thead>";
+                    tblhtml = tblhtml + "<tbody>";
+                    for (index = 0; index < data.length; index++) {
+                        tblhtml = tblhtml + "<tr><td>" + data[index].CardCode_C1 + "</td><td>" + data[index].CardName_C1 + "</td><td>" + data[index].CREDIT_NOTE_NO_C1 + "</td><td>" + data[index].DocDate_C1 + "</td><td>" + data[index].ItemCode_C1 + "</td><td>" + data[index].Description_C1 + "</td><td>" + data[index].Quantity_C1 + "</td><td>" + data[index].ITEM_VALUE_C1 + "</td><td>" + data[index].CheckAmount + "</td></tr>";
+                    }
+                    tblhtml = tblhtml + "</tbody></table>";
+                    console.log(tblhtml);
+
+                    var ua = window.navigator.userAgent;
+                    var msie = ua.indexOf("MSIE");
+                    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+                    {
+                        txtArea1.document.open("txt/html", "replace");
+                        txtArea1.document.write(tblhtml);
+                        txtArea1.document.close();
+                        txtArea1.focus();
+                        sa = txtArea1.document.execCommand("SaveAs", false, "Credit Note Report.xls");
+
+
+                    }
+                    else                 //other browser not tested on IE 11
+                        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tblhtml));
+
+                    return (sa);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+        //Ageing Report Code
+        function AgingReport() {
+            $('#divMyReportsCredit').hide();
+            $('#divMyReportsBank').hide();
+            $('#divMyReportsInvoice').hide();
+            $('#divMyReportsAccount').hide();
+            $('#divMyReportsItemPurchase').hide();
+            $('#divMyReportsPendingOrderReport').hide();
+            $('#divReport').show();
+            var CardCode = $('#ddlCustomerName').val();
+            var radiovalue = '';
+            if ($("#radio_1").is(":checked")) {
+                radiovalue = 1;
+            }
+            else if ($("#radio_2").is(":checked")) {
+                radiovalue = 2;
+            }
+            else
+                radiovalue = 3;
+            $('#tblMyReports').dataTable
+                ({
+                    destroy: true,
+                    "ajax":
+                        {
+                            "url": '@Url.Action("AgingReport", "UserPage")',
+                            "data": { "sCardCode": CardCode, 'sradio': radiovalue },
+                            "type": "POST"
+                        },
+                    "columns":
+                        [
+                            { "data": "CardCode" }, //, targets: 'no-sort', orderable: false
+                        { "data": "CustomerName" },
+                        { "data": "Parent_Child" },
+                        { "data": "sAgingLocation" },
+                        {
+                            "mRender": function (data, type, row) {
+                                return "<span style='float: right;'>" + row.CurrentBalance + "</span>"
+                            }
+                        },
+                        {
+                            "mRender": function (data, type, row) {
+                                return "<span style='float: right;'>" + row.Days_030 + "</span>"
+                            }
+                        },
+                        {
+                            "mRender": function (data, type, row) {
+                                return "<span style='float: right;'>" + row.Days_3160 + "</span>"
+                            }
+                        },
+                        {
+                            "mRender": function (data, type, row) {
+                                return "<span style='float: right;'>" + row.Days_6190 + "</span>"
+                            }
+                        },
+                        {
+                            "mRender": function (data, type, row) {
+                                return "<span style='float: right;'>" + row.Days_91120 + "</span>"
+                            }
+                        },
+                        {
+                            "mRender": function (data, type, row) {
+                                return "<span style='float: right;'>" + row.Days_121 + "</span>"
+                            }
+                        },
+                        {
+                            "mRender": function (data, type, row) {
+                                return "<a href='#' id='aDetails' data-toggle='modal' data-target='#myModalARD' onclick= \"return BindAgingReportRowWise('" + row.CardCode + "')\">View Details</a>"
+                            }, targets: 'no-sort', orderable: false
+                        },
+
+                        ]
+                });
+            $('#tblMyReports').on('xhr.dt', function (e, settings, json) {
+                $.each(json.data, function (a, data) {
+                });
+            });
+
+        }
+        // END
+
+
+        //Pending Order Report Report Code
+        function PendingOrderReport() {
+            //$("#loader").show();
+            $('#divMyReports').hide();
+            $('#divReport').hide();
+            $('#divMyReportsBank').hide();
+            $('#divMyReportsInvoice').hide();
+            $('#divMyReportsAccount').hide();
+            $('#divMyReportsItemPurchase').hide();
+            $('#divMyReportsItemPurchase').hide();
+            $('#divMyReportsPendingOrderReport').show();
+
+            var CardCode = $('#ddlCustomerName').val();
+            var Status = $('#ddlUserType').val();
+            var FromDT = $('#txtFromDatePen').val();
+            var ToDT = $('#txtToDatePen').val();
+            var radiovalue = '';
+            if ($("#radio_1").is(":checked")) {
+                radiovalue = 1;
+            }
+            else if ($("#radio_2").is(":checked")) {
+                radiovalue = 2;
+            }
+            else
+                radiovalue = 3;
+            $('#tblMyReportsPendingOrderReport').dataTable
+                ({
+                    destroy: true,
+                    "ajax":
+                        {
+                            "url": '@Url.Action("PendingOrderReport", "UserPage")',
+                            "data": { "sCardCode": CardCode, "sFromDate": FromDT, "sToDate": ToDT, "sStatus": Status, 'sradio': radiovalue },
+                            "type": "POST"
+                        },
+                    "columns":
+                        [
+                                { "data": "Document_No_Pen" },
+                        { "data": "CardCode_Pen" },
+                        { "data": "CardName_Pen" },
+                        { "data": "Location" },
+                        {
+                            "mRender": function (data, type, row) {
+                                return "<span style='float: right;'>" + row.DocTotal + "</span>"
+                            }
+                        },
+                        { "data": "Status" },
+                        { "data": "TranspoterName" },
+                        { "data": "LR_NO" },
+                        { "data": "Veh_No" }
+                        ]
+                });
+                $('#tblMyReportsPendingOrderReport').on('xhr.dt', function (e, settings, json) {
+                    $.each(json.data, function (a, data) {
+                    });
+                });
+
+            }
+            // END
+
+            //Item Purchase Report Code
+            function ItemPurchase() {
+                //$("#loader").show();
+                $('#divMyReports').hide();
+                $('#divReport').hide();
+                $('#divMyReportsBank').hide();
+                $('#divMyReportsInvoice').hide();
+                $('#divMyReportsAccount').hide();
+                $('#divMyReportsPendingOrderReport').hide();
+                $('#divMyReportsItemPurchase').show();
+                var CardCode = $('#ddlCustomerName').val();
+                var FromDT = $('#txtFromDT').val();
+                var ToDT = $('#txtToDT').val();
+                var radiovalue = '';
+                if ($("#radio_1").is(":checked")) {
+                    radiovalue = 1;
+                }
+                else if ($("#radio_2").is(":checked")) {
+                    radiovalue = 2;
+                }
+                else
+                    radiovalue = 3;
+                $('#tblMyReportsItemPurchase').dataTable
+                    ({
+                        destroy: true,
+                        "ajax":
+                            {
+                                "url": '@Url.Action("ItemPurchase", "UserPage")',
+                                "data": { "sCardCode": CardCode, "sFromDate": FromDT, "sToDate": ToDT, 'sradio': radiovalue },
+                                "type": "POST"
+                            },
+                        "columns":
+                            [
+                                { "data": "ItemGroup_ITEM" },
+                            {
+                                "mRender": function (data, type, row) {
+                                    return "<span style='float: right;'>" + row.Quantity_ITEM + "</span>"
+                                }
+                            },
+                            {
+                                "mRender": function (data, type, row) {
+                                    return "<span style='float: right;'>" + row.DocTotal_ITEM + "</span>"
+                                }
+                            },
+                            {
+                                "mRender": function (data, type, row) {
+                                    return "<a href='#' id='ItemSubGrp' data-toggle='modal' data-target='#myModalItmSubGrp' onclick= \"return BindItemSubGroup('" + row.ItemGroup_ITEM + "')\">View Details</a>"
+                                }, targets: 'no-sort', orderable: false
+                            },
+                            {
+                                "mRender": function (data, type, row) {
+                                    return "<a href='#' id='aDetails' data-toggle='modal' data-target='#myModalItem' onclick= \"return BindItemGroupItem('" + row.ItemGroup_ITEM + "')\">View Details</a>"
+                                }, targets: 'no-sort', orderable: false
+                            },
+                            ]
+                    });
+                    $('#tblMyReportsItemPurchase').on('xhr.dt', function (e, settings, json) {
+                        $.each(json.data, function (a, data) {
+                        });
+                    });
+
+                }
+                // END
+
+                //Invoice Report Code
+                function InvoiceReport() {
+                    //$("#loader").show();
+                    $('#divMyReports').hide();
+                    $('#divReport').hide();
+                    $('#divMyReportsBank').hide();
+                    $('#divMyReportsItemPurchase').hide();
+                    $('#divMyReportsPendingOrderReport').hide();
+                    $('#divMyReportsInvoice').show();
+                    $('#divMyReportsAccount').hide();
+                    var CardCode = $('#ddlCustomerName').val();
+                    var FromDT = $('#txtFromDT').val();
+                    var ToDT = $('#txtToDT').val();
+                    var radiovalue = '';
+                    if ($("#radio_1").is(":checked")) {
+                        radiovalue = 1;
+                    }
+                    else if ($("#radio_2").is(":checked")) {
+                        radiovalue = 2;
+                    }
+                    else
+                        radiovalue = 3;
+                    $('#tblMyReportsInvoice').dataTable
+                        ({
+                            destroy: true,
+                            "ajax":
+                                {
+                                    "url": '@Url.Action("InvoiceReport", "UserPage")',
+                                    "data": { "sCardCode": CardCode, "sFromDate": FromDT, "sToDate": ToDT, 'sradio': radiovalue },
+                                    "type": "POST"
+                                },
+                            "columns":
+                                [
+                                    { "data": "Document_ENo_IN" },
+                            { "data": "CardCode_IN" },
+                            { "data": "CardName_IN" },
+                            { "data": "DocDate_C1" },
+                        {
+                            "mRender": function (data, type, row) {
+                                return "<span style='float: right;'>" + row.Total + "</span>"
+                            }
+                        },
+                            { "data": "Location" },
+                            {
+                                "mRender": function (data, type, row) {
+                                    return "<a href='#' id='InvoicePDF' onclick= \"return fnCrystelReport('" + row.Document_ENo_IN + "','" + row.DocDate_C1 + "')\">Download Invoice</a>"
+                                }, targets: 'no-sort', orderable: false
+                            }
+                                ]
+                        });
+                        $('#tblMyReportsInvoice').on('xhr.dt', function (e, settings, json) {
+                            $.each(json.data, function (a, data) {
+                            });
+                        });
+                    }
+                    // END
+
+                    //Account Statement Report Code
+                    function AccountStatement() {
+                        //$("#loader").show();
+                        $('#divMyReports').hide();
+                        $('#divReport').hide();
+                        $('#divMyReportsBank').hide();
+                        $('#divMyReportsItemPurchase').hide();
+                        $('#divMyReportsPendingOrderReport').hide();
+                        $('#divMyReportsInvoice').hide();
+                        $('#divMyReportsAccount').show();
+                        var CardCode = $('#ddlCustomerName').val();
+                        var FromDT = $('#txtFromDTStmt').val();
+                        var ToDT = $('#txtToDTStmt').val();
+                        var radiovalue = '';
+                        if ($("#radio_1").is(":checked")) {
+                            radiovalue = 1;
+                        }
+                        else if ($("#radio_2").is(":checked")) {
+                            radiovalue = 2;
+                        }
+                        else
+                            radiovalue = 3;
+                        $('#tblMyReportsAccount').dataTable
+                            ({
+                                destroy: true,
+                                "bSort": false,
+                                "ajax":
+                                    {
+                                        "url": '@Url.Action("AccountStatement", "UserPage")',
+                                        "data": { "sCardCode": CardCode, "sFromDate": FromDT, "sToDate": ToDT, 'sradio': radiovalue },
+                                        "type": "POST"
+                                    },
+                                "columns":
+                                    [
+                                        { "data": "CardName" },
+                                        { "data": "CardCode" },
+                                        { "data": "Location" },
+                                        { "data": "TransType" },
+                                        { "data": "REFDATE" },
+                                        { "data": "Series" },
+                                        { "data": "baseRef" },
+                                        { "data": "Ref2" },
+                                        {
+                                            "mRender": function (data, type, row) {
+                                                return "<span style='float: right;'>" + row.DEBIT + "</span>"
+                                            }
+                                        },
+                                        {
+                                            "mRender": function (data, type, row) {
+                                                return "<span style='float: right;'>" + row.CREDIT + "</span>"
+                                            }
+                                        },
+                                        {
+                                            "mRender": function (data, type, row) {
+                                                return "<span style='float: right;'>" + row.RunningTotal + "</span>"
+                                            }
+                                        }
+
+                                    ]
+                            });
+                            $('#tblMyReportsAccount').on('xhr.dt', function (e, settings, json) {
+                                $.each(json.data, function (a, data) {
+                                });
+                            });
+                        }
+                        // END
+
+                        //Bank Receipt Report Report Code
+                        function BankReceiptReport() {
+                            $('#divMyReportsInvoice').hide();
+                            $('#divMyReportsAccount').hide();
+                            $('#divMyReportsCredit').hide();
+                            $('#divReport').hide();
+                            $('#divMyReportsItemPurchase').hide();
+                            $('#divMyReportsPendingOrderReport').hide();
+                            $('#divMyReportsBank').show();
+                            var CardCode = $('#ddlCustomerName').val();
+                            var FromDT = $('#txtFromDT').val();
+                            var ToDT = $('#txtToDT').val();
+                            var radiovalue = '';
+                            if ($("#radio_1").is(":checked")) {
+                                radiovalue = 1;
+                            }
+                            else if ($("#radio_2").is(":checked")) {
+                                radiovalue = 2;
+                            }
+                            else
+                                radiovalue = 3;
+                            $('#tblMyReportsBank').dataTable
+                                ({
+                                    destroy: true,
+                                    "ajax":
+                                        {
+                                            "url": '@Url.Action("BankReceiptReport", "UserPage")',
+                                            "data": { "sCardCode": CardCode, "sFromDate": FromDT, "sToDate": ToDT, 'sradio': radiovalue },
+                                            "type": "POST"
+                                        },
+                                    "columns":
+                                        [
+                                           { "data": "Document_No1" }, //, targets: 'no-sort', orderable: false
+                                    { "data": "Posting_Date1" },
+                                    { "data": "Discription1" },
+
+                                    { "data": "PaymentType" },
+                                    { "data": "ChequeNo" },
+                                    { "data": "ChequeDate" },
+                                    { "data": "DriaweeBankName" },
+                                    {
+                                        "mRender": function (data, type, row) {
+                                            return "<span style='float: right;'>" + row.CheckAmount + "</span>"
+                                        }
+                                    },
+                            {
+                                "mRender": function (data, type, row) {
+                                    return "<a href='#' id='InvoicePDF' onclick= \"return fnCrystelReportPaymentSummary('" + row.Document_No1 + "','" + row.Posting_Date1 + "')\">Download Payment Details</a>"
+                                }, targets: 'no-sort', orderable: false
+                            }
+                                        ]
+                                });
+                                $('#tblMyReportsBank').on('xhr.dt', function (e, settings, json) {
+                                    $.each(json.data, function (a, data) {
+                                    });
+                                });
+                            }
+                            // END
+
+
+
+                            //Credit Note Report Report Code
+                            function CreditNoteReport() {
+                                $('#divReport').hide();
+                                $('#divMyReportsInvoice').hide();
+                                $('#divMyReportsAccount').hide();
+                                $('#divMyReportsBank').hide();
+                                $('#divMyReportsItemPurchase').hide();
+                                $('#divMyReportsPendingOrderReport').hide();
+                                $('#divMyReportsCredit').show();
+                                var radiovalue = '';
+                                if ($("#radio_1").is(":checked")) {
+                                    radiovalue = 1;
+                                }
+                                else if ($("#radio_2").is(":checked")) {
+                                    radiovalue = 2;
+                                }
+                                else
+                                    radiovalue = 3;
+                                var CardCode = $('#ddlCustomerName').val();
+                                var FromDT = $('#txtFromDT').val();
+                                var ToDT = $('#txtToDT').val();
+                                $('#theadmydata').empty();
+                                var rowhead = "<tr style='background: rgba(158, 158, 158, 0.13)'></tr>";
+                                //rowhead += "<th>C Form Days</th><th>Advance</th><th>0-15</th><th>16-30</th><th>31-45</th><th>>45</th><th>Total</th></tr>";
+                                $('#theadmydata').html(rowhead);
+                                $('#tblMyReportsCredit').dataTable
+                                    ({
+                                        destroy: true,
+                                        "ajax":
+                                            {
+                                                "url": '@Url.Action("CreditNoteReport", "UserPage")',
+                                                "data": { "sCardCode": CardCode, "sFromDate": FromDT, "sToDate": ToDT, 'sradio': radiovalue },
+                                                "type": "POST"
+                                            },
+                                        "columns":
+                                            [
+                                               { "data": "CardName_C1" },
+                                        { "data": "CardCode_C1" },
+                                        { "data": "CREDIT_NOTE_NO_C1" },
+                                        { "data": "DocDate_C1" },
+
+                                        { "data": "ItemCode_C1" },
+                                        { "data": "Description_C1" },
+                                        {
+                                            "mRender": function (data, type, row) {
+                                                return "<span style='float: right;'>" + row.Quantity_C1 + "</span>"
+                                            }
+                                        },
+                                        {
+                                            "mRender": function (data, type, row) {
+                                                return "<span style='float: right;'>" + row.ITEM_VALUE_C1 + "</span>"
+                                            }
+                                        },
+                                        { "data": "Open_Qty_C1" },
+                                            {
+                                                "mRender": function (data, type, row) {
+                                                    return "<a href='#' id='InvoicePDF' onclick= \"return fnCrystelReportCreditNote('" + row.CREDIT_NOTE_NO_C1 + "','" + row.DocDate_C1 + "')\">Download Credit Note</a>"
+                                                }, targets: 'no-sort', orderable: false
+                                            }
+
+                                            ]
+                                    });
+                                    $('#tblMyReportsCredit').on('xhr.dt', function (e, settings, json) {
+                                        $.each(json.data, function (a, data) {
+                                        });
+                                    });
+                                }
+
+                                //Bind Over Less Than 15
+                                function BindOverLessThan15() {
+                                    var sCardCode = '';
+                                    sCardCode = $('#ddlCustomerName').val();
+                                    $('#tblMyDataList').dataTable
+                                        ({
+                                            destroy: true,
+                                            "ajax":
+                                                {
+                                                    "url": '@Url.Action("BindViewLessThanEqual15", "UserPage")',
+                                                    "data": { "sCardCode": sCardCode },
+                                                    "type": "POST"
+                                                },
+                                            "columns":
+                                                [
+                                                    { "data": "DocNum_Less" },
+                                            { "data": "DocDate_Less" },
+                                            { "data": "DocDueDate_Less" },
+                                            {
+                                                "mRender": function (data, type, row) {
+                                                    return "<span style='float: right;'>" + row.Doctotal_Less + "</span>"
+                                                }
+                                            },
+                                            {
+                                                "mRender": function (data, type, row) {
+                                                    return "<span style='float: right;'>" + row.BalancAmount_Less + "</span>"
+                                                }
+                                            },
+                                            { "data": "DAYS_Less1" },
+                                                ]
+                                        });
+                                        $('#tblMyDataList').on('xhr.dt', function (e, settings, json) {
+                                            $.each(json.data, function (a, data) {
+                                            });
+                                        });
+                                    }
+                                    // END
+
+
+                                    //Bind partially unpaid invoice
+                                    function BindPartiallyUnpaidInvoice() {
+                                        debugger;
+                                        var sCardCode = '';
+                                        sCardCode = $('#ddlCustomerName').val();
+                                        $('#tblMyDataList5').DataTable
+                                                ({
+                                                    destroy: true,
+                                                    "ajax":
+                                                    {
+                                                        "url": '@Url.Action("PartiallyUnpaidInvoice")',
+                                                        "data": { "sCardCode": sCardCode },
+                                                        "type": "POST"
+                                                    },
+                                                    "columns":
+                                                        [
+                                                            //{ "data": "Sno", targets: 'no-sort', orderable: false },
+                                                            { "data": "InvoiceNo" },
+                                                            { "data": "InvoiceDate" },
+                                                            { "data": "UnpaidDueDate" },
+                                                            {
+                                                                "mRender": function (data, type, row) {
+                                                                    return "<span style='float: right;'>" + row.InvoiceAmount + "</span>"
+                                                                }
+                                                            },
+                                                            {
+                                                                "mRender": function (data, type, row) {
+                                                                    return "<span style='float: right;'>" + row.PaidAmount + "</span>"
+                                                                }
+                                                            },
+                                                            {
+                                                                "mRender": function (data, type, row) {
+                                                                    return "<span style='float: right;'>" + row.BalancAmount + "</span>"
+                                                                }
+                                                            },
+                                                            { "data": "UnpaidDueDays" }
+                                                        ]
+                                                });
+                                                $('#tblMyDataList5').on('xhr.dt', function (e, settings, json) {
+                                                    $.each(json.data, function (a, data) {
+                                                    });
+                                                });
+                                            }
+                                            // END
+
+                                            //Bind Over Greater Than 15
+                                            function BindOverDueGre15() {
+                                                var sCardCode = '';
+                                                sCardCode = $('#ddlCustomerName').val();
+                                                $('#tblMyDataList2').DataTable
+                                                        ({
+                                                            destroy: true,
+                                                            "ajax":
+                                                            {
+                                                                "url": '@Url.Action("BindViewGreaterThan15", "UserPage")',
+                                                                "data": { "sCardCode": sCardCode },
+                                                                "type": "POST"
+                                                            },
+                                                            "columns":
+                                                                [
+                                                                    { "data": "DocNum_Gre" },
+                                                            { "data": "DocDate_Gre" },
+                                                            { "data": "DocDueDate_Gre" },
+                                                            {
+                                                                "mRender": function (data, type, row) {
+                                                                    return "<span style='float: right;'>" + row.Doctotal_Gre + "</span>"
+                                                                }
+                                                            },
+                                                            {
+                                                                "mRender": function (data, type, row) {
+                                                                    return "<span style='float: right;'>" + row.BalancAmount_Gre + "</span>"
+                                                                }
+                                                            },
+                                                            { "data": "DAYS_Less" },
+                                                                ]
+                                                        });
+                                                        $('#tblMyDataList2').on('xhr.dt', function (e, settings, json) {
+                                                            $.each(json.data, function (a, data) {
+                                                            });
+                                                        });
+                                                    }
+                                                    // END
+
+                                                    //Bind Exp Payment
+                                                    function BindOverExpPay() {
+                                                        var sCardCode = '';
+                                                        sCardCode = $('#ddlCustomerName').val();
+                                                        $('#tblMyDataList3').DataTable
+                                                                ({
+                                                                    destroy: true,
+                                                                    "ajax":
+                                                                    {
+                                                                        "url": '@Url.Action("BindViewExpPaymnet", "UserPage")',
+                                                                        "data": { "sCardCode": sCardCode },
+                                                                        "type": "POST"
+                                                                    },
+                                                                    "columns":
+                                                                        [
+                                                                            { "data": "Document_No2" },
+                                                            { "data": "DocDate2" },
+                                                            { "data": "DocDueDate2" },
+                                                            {
+                                                                "mRender": function (data, type, row) {
+                                                                    return "<span style='float: right;'>" + row.DocTotal2 + "</span>"
+                                                                }
+                                                            },
+                                                            {
+                                                                "mRender": function (data, type, row) {
+                                                                    return "<span style='float: right;'>" + row.BalancAmount2 + "</span>"
+                                                                }
+                                                            },
+                                                            { "data": "DAYS2" },
+                                                                        ]
+                                                                });
+                                                                $('#tblMyDataList3').on('xhr.dt', function (e, settings, json) {
+                                                                    $.each(json.data, function (a, data) {
+                                                                    });
+                                                                });
+                                                            }
+                                                            // END
+
+                                                            //Bind Exp Payment
+                                                            function BindOverOrderValue() {
+                                                                var sCardCode = '';
+                                                                sCardCode = $('#ddlCustomerName').val();
+                                                                $('#tblMyDataList4').DataTable
+                                                                        ({
+                                                                            destroy: true,
+                                                                            "ajax":
+                                                                            {
+                                                                                "url": '@Url.Action("BindViewOrderValue", "UserPage")',
+                                                    "data": { "sCardCode": sCardCode },
+                                                    "type": "POST"
+                                                },
+                                                "columns":
+                                                    [
+                                                        { "data": "Document_No3" },
+                                { "data": "Document_Date3" },
+                                { "data": "Posting_Date3" },
+                                {
+                                    "mRender": function (data, type, row) {
+                                        return "<span style='float: right;'>" + row.DocTotal3 + "</span>"
+                                    }
+                                },
+                                {
+                                    "mRender": function (data, type, row) {
+                                        return "<span style='float: right;'>" + row.BalancAmount3 + "</span>"
+                                    }
+                                },
+                                { "data": "DAYS3" },
+                                                    ]
+                                            });
+                                            $('#tblMyDataList4').on('xhr.dt', function (e, settings, json) {
+                                                $.each(json.data, function (a, data) {
+                                                });
+                                            });
+                                        }
+                                        // END
+
+
+                                        //FOR BIND AGING REPORT DETAILS ROW WISE
+                                        function BindAgingReportRowWise(CardCode) {
+                                            var radiovalue = '';
+                                            if ($("#radio_1").is(":checked")) {
+                                                radiovalue = 1;
+                                            }
+                                            else if ($("#radio_2").is(":checked")) {
+                                                radiovalue = 2;
+                                            }
+                                            else
+                                                radiovalue = 3;
+                                            $('#tblMyDataListAgingDetail').DataTable
+                                                    ({
+                                                        destroy: true,
+                                                        "ajax":
+                                                        {
+                                                            "url": '@Url.Action("BindAgingReportRowWise", "UserPage")',
+                                                                                        "data": { "sCardCode": CardCode },
+                                                                                        "type": "POST"
+                                                                                    },
+                                                                                    "columns":
+                                                                                        [
+                                                                                            { "data": "Refdate" },
+                                                                                        { "data": "CurrentBalance" },
+                                                                                        { "data": "Remarks" },
+                                                                                        {
+                                                                                            "mRender": function (data, type, row) {
+                                                                                                return "<span style='float: right;'>" + row.DocTotal_AD + "</span>"
+                                                                                            }
+                                                                                        },
+                                                                                        {
+                                                                                            "mRender": function (data, type, row) {
+                                                                                                return "<span style='float: right;'>" + row.DocumentValueLC + "</span>"
+                                                                                            }
+                                                                                        },
+                                                                                        { "data": "LineID" },
+                                                                                        ]
+                                                                                });
+                                                                                $('#tblMyDataListAgingDetail').on('xhr.dt', function (e, settings, json) {
+                                                                                    $.each(json.data, function (a, data) {
+                                                                                    });
+                                                                                });
+                                                                            }
+                                                                            // END
+
+                                                                            //FOR BIND ITEM PURCHASE REPORT ITEM SUB GROUP ROW WISE
+                                                                            function BindItemSubGroup(ItemGroupName) {
+                                                                                //debugger;
+                                                                                var FromDT = $('#txtFromDT').val();
+                                                                                var ToDT = $('#txtToDT').val();
+                                                                                var CardCode = $('#ddlCustomerName').val();
+                                                                                var radiovalue = '';
+                                                                                if ($("#radio_1").is(":checked")) {
+                                                                                    radiovalue = 1;
+                                                                                }
+                                                                                else if ($("#radio_2").is(":checked")) {
+                                                                                    radiovalue = 2;
+                                                                                }
+                                                                                else
+                                                                                    radiovalue = 3;
+                                                                                $('#tblMyDataListSubGroup').DataTable
+                                                                                        ({
+                                                                                            destroy: true,
+                                                                                            "ajax":
+                                                                                            {
+                                                                                                "url": '@Url.Action("BindItemSubGroup", "UserPage")',
+                                                                                                "data": { "sCardCode": CardCode, "sFromDate": FromDT, "sToDate": ToDT, 'sRadio': radiovalue, 'sGroupName': ItemGroupName },
+                                                                                                "type": "POST"
+                                                                                            },
+                                                                                            "columns":
+                                                                                                [
+                                                                                                   { "data": "ItemGroup_ITEM" },
+                                                                                                {
+                                                                                                    "mRender": function (data, type, row) {
+                                                                                                        return "<span style='float: right;'>" + row.QuantitySub_ITEM + "</span>"
+                                                                                                    }
+                                                                                                },
+                                                                                                {
+                                                                                                    "mRender": function (data, type, row) {
+                                                                                                        return "<span style='float: right;'>" + row.DocTotalSub_ITEM + "</span>"
+                                                                                                    }
+                                                                                                },
+                                                                                                ]
+                                                                                        });
+                                                                                        $('#tblMyDataListSubGroup').on('xhr.dt', function (e, settings, json) {
+                                                                                            $.each(json.data, function (a, data) {
+                                                                                            });
+                                                                                        });
+                                                                                    }
+                                                                                    // END
+
+                                                                                    //FOR BIND ITEM PURCHASE REPORT ITEM SUB GROUP Item ROW WISE
+                                                                                    function BindItemGroupItem(ItemGroupName) {
+                                                                                        //debugger;
+                                                                                        var FromDT = $('#txtFromDT').val();
+                                                                                        var ToDT = $('#txtToDT').val();
+                                                                                        var CardCode = $('#ddlCustomerName').val();
+                                                                                        var radiovalue = '';
+                                                                                        if ($("#radio_1").is(":checked")) {
+                                                                                            radiovalue = 1;
+                                                                                        }
+                                                                                        else if ($("#radio_2").is(":checked")) {
+                                                                                            radiovalue = 2;
+                                                                                        }
+                                                                                        else
+                                                                                            radiovalue = 3;
+                                                                                        $('#tblMyDataListItem').DataTable
+                                                                                                ({
+                                                                                                    destroy: true,
+                                                                                                    "ajax":
+                                                                                                    {
+                                                                                                        "url": '@Url.Action("BindItemGroupItem", "UserPage")',
+                                                                                                        "data": { "sCardCode": CardCode, "sFromDate": FromDT, "sToDate": ToDT, 'sRadio': radiovalue, 'sGroupName': ItemGroupName },
+                                                                                                        "type": "POST"
+                                                                                                    },
+                                                                                                    "columns":
+                                                                                                        [
+                                                                                                            { "data": "DocEntry_ITEM" },
+                                                                                                    { "data": "CardCode_ITEM" },
+                                                                                                    { "data": "CardName_ITEM" },
+                                                                                                    { "data": "ItemCode_ITEM" },
+                                                                                                    { "data": "Discription_ITEM" },
+                                                                                                    {
+                                                                                                        "mRender": function (data, type, row) {
+                                                                                                            return "<span style='float: right;'>" + row.Quantity_ITEM + "</span>"
+                                                                                                        }
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "mRender": function (data, type, row) {
+                                                                                                            return "<span style='float: right;'>" + row.DocTotal_ITEM + "</span>"
+                                                                                                        }
+                                                                                                    },
+                                                                                                        ]
+                                                                                                });
+                                                                                                $('#tblMyDataListItem').on('xhr.dt', function (e, settings, json) {
+                                                                                                    $.each(json.data, function (a, data) {
+                                                                                                    });
+                                                                                                });
+                                                                                            }
+                                                                                            // END
+
+                                                                                            function fnCrystelReport(DocNum, date) {
+                                                                                                //debugger;
+                                                                                                $.ajax({
+                                                                                                    url: "/UserPage/ExportRPT",
+                                                                                                    type: "POST",
+                                                                                                    data: JSON.stringify({ 'sDocNum': DocNum, 'sDocDate': date }),
+                                                                                                    dataType: "json",
+                                                                                                    traditional: true,
+                                                                                                    contentType: "application/json; charset=utf-8",
+                                                                                                    success: function (data) {
+                                                                                                        console.log(data);
+                                                                                                        if (data.recordFound > 0) {
+                                                                                                            window.open("../Export.aspx");
+                                                                                                        }
+                                                                                                        else {
+                                                                                                            alert('No Record Found');
+                                                                                                        }
+                                                                                                    },
+                                                                                                    error: function (xhr, status, error) {
+                                                                                                        console.log(error);
+                                                                                                    }
+                                                                                                });
+                                                                                            }
+                                                                                            function fnCrystelReportCreditNote(DocNum, date) {
+                                                                                                //debugger;
+                                                                                                $.ajax({
+                                                                                                    url: "/UserPage/ExportRPTCreditNote",
+                                                                                                    type: "POST",
+                                                                                                    data: JSON.stringify({ 'sDocNum': DocNum, 'sDocDate': date }),
+                                                                                                    dataType: "json",
+                                                                                                    traditional: true,
+                                                                                                    contentType: "application/json; charset=utf-8",
+                                                                                                    success: function (data) {
+                                                                                                        console.log(data);
+                                                                                                        if (data.recordFound > 0) {
+                                                                                                            window.open("../Export.aspx");
+                                                                                                        }
+                                                                                                        else {
+                                                                                                            alert('No Record Found');
+                                                                                                        }
+                                                                                                    },
+                                                                                                    error: function (xhr, status, error) {
+                                                                                                        console.log(error);
+                                                                                                    }
+                                                                                                });
+                                                                                            }
+                                                                                            function fnCrystelReportPaymentSummary(DocNum, date) {
+                                                                                                //debugger;
+                                                                                                $.ajax({
+                                                                                                    url: "/UserPage/ExportRPTPaymentSummary",
+                                                                                                    type: "POST",
+                                                                                                    data: JSON.stringify({ 'sDocNum': DocNum, 'sDocDate': date }),
+                                                                                                    dataType: "json",
+                                                                                                    traditional: true,
+                                                                                                    contentType: "application/json; charset=utf-8",
+                                                                                                    success: function (data) {
+                                                                                                        console.log(data);
+                                                                                                        if (data.recordFound > 0) {
+                                                                                                            window.open("../Export.aspx");
+                                                                                                        }
+                                                                                                        else {
+                                                                                                            alert('No Record Found');
+                                                                                                        }
+                                                                                                    },
+                                                                                                    error: function (xhr, status, error) {
+                                                                                                        console.log(error);
+                                                                                                    }
+                                                                                                });
+                                                                                            }
+                                                                                            function GetAccountStatementPDF() {
+                                                                                                //debugger;
+                                                                                                var CardCode = $('#ddlCustomerName').val();
+                                                                                                var FromDT = $('#txtFromDTStmt').val();
+                                                                                                var ToDT = $('#txtToDTStmt').val();
+                                                                                                var radiovalue = '';
+                                                                                                if ($("#radio_1").is(":checked")) {
+                                                                                                    radiovalue = 1;
+                                                                                                }
+                                                                                                else if ($("#radio_2").is(":checked")) {
+                                                                                                    radiovalue = 2;
+                                                                                                }
+                                                                                                else
+                                                                                                    radiovalue = 3;
+                                                                                                AccountStatementReportPDF(CardCode, FromDT, ToDT, radiovalue);
+                                                                                            }
+                                                                                            function AccountStatementReportPDF(CardCode, FromDT, ToDT, radiovalue) {
+                                                                                                //debugger;
+                                                                                                $.ajax({
+                                                                                                    url: "/UserPage/ExportRPTAccountStatementPDFData",
+                                                                                                    type: "POST",
+                                                                                                    data: JSON.stringify({ 'sCardCode': CardCode, 'sFromDate': FromDT, 'sToDate': ToDT, 'sRadio': radiovalue }),
+                                                                                                    dataType: "json",
+                                                                                                    traditional: true,
+                                                                                                    contentType: "application/json; charset=utf-8",
+                                                                                                    success: function (data) {
+                                                                                                        console.log(data);
+                                                                                                        if (data.recordFound > 0) {
+                                                                                                            window.open("../Export.aspx");
+                                                                                                        }
+                                                                                                        else {
+                                                                                                            alert('No Record Found');
+                                                                                                        }
+                                                                                                    },
+                                                                                                    error: function (xhr, status, error) {
+                                                                                                        console.log(error);
+                                                                                                    }
+                                                                                                });
+                                                                                            }
+    </script>
+    @*<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">*@
+    <link href="~/DataTable/css/jquery-ui.css" rel="stylesheet" />
+    @*<link rel="stylesheet" href="/resources/demos/style.css">*@
+    @*<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
+    <script src="~/DataTable/js/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#txtFromDT").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "mm/dd/yy"
+            });
+            $("#txtToDT").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "mm/dd/yy"
+            });
+            $("#txtFromDatePen").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "mm/dd/yy"
+            });
+            $("#txtToDatePen").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "mm/dd/yy"
+            });
+            $("#txtFromDTStmt").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "mm/dd/yy"
+            });
+            $("#txtToDTStmt").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "mm/dd/yy"
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+

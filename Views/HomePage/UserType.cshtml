@@ -1,0 +1,137 @@
+﻿@{
+    ViewBag.Title = "User Type";
+    Layout = "~/Views/Shared/_DashBoard.cshtml";
+}
+
+<script type="text/javascript">
+    function GetReportExcel() {
+        LoginStatusExcel();
+    }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetLoginUserDetails();
+    });
+
+    function GetLoginUserDetails() {
+        $("#loader").show();
+        //debugger;
+        $.ajax({
+            url: "/HomePage/GetUserTypeDetails",
+            type: "POST",
+            data: JSON.stringify({}),
+            dataType: "json",
+            traditional: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                debugger;
+                $('#theadmydata').empty();
+                $('#tbodymydata').empty();
+                var rowhead = "<tr style='background: rgba(158, 158, 158, 0.13)'><th>User Id</th><th>User Type Name</th><th>User Count</th>";
+                var rowbody = '';
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        rowbody += "<tr><td style='width:15%'>" +
+                           data[i].USERID + "</td><td style='width:25%'>" +
+                           data[i].USER_TYPE + "</td><td style='width:15%'>" +
+                           data[i].User_Count + "</td></tr>";
+                    }
+                    $("#loader").hide();
+                }
+                else {
+                    rowbody = "<td colspan=10> No Record Found </td>"
+                    $("#loader").hide();
+                }
+                $('#theadmydata').html(rowhead);
+                $('#tbodymydata').html(rowbody);
+
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+                $("#loader").hide();
+            }
+        });
+    }
+    function UserTypeExportExcel() {
+        debugger;
+        $.ajax({
+            url: "/HomePage/GetUserTypeDetails",
+            type: "POST",
+            data: JSON.stringify({}),
+            dataType: "json",
+            traditional: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                var tblhtml = "<table border='1'><thead><tr><th>User Id</th><th>User Type Name</th><th>User Count</th>";
+                tblhtml = tblhtml + "<tbody>";
+                for (index = 0; index < data.length; index++) {
+                    tblhtml = tblhtml + "<tr><td>" +
+                        data[index].USERID + "</td><td style='width:25%'>" +
+                           data[index].USER_TYPE + "</td><td style='width:15%'>" +
+                           data[index].User_Count + "</td></tr>";
+                }
+                tblhtml = tblhtml + "</tbody></table>";
+                console.log(tblhtml);
+
+                var ua = window.navigator.userAgent;
+                var msie = ua.indexOf("MSIE");
+                if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+                {
+                    tblMyReports.document.open("txt/html", "replace");
+                    tblMyReports.document.write(tblhtml);
+                    tblMyReports.document.close();
+                    tblMyReports.focus();
+                    sa = divReport.document.execCommand("SaveAs", false, "LoggedInStatusReport.xls");
+
+
+                }
+                else                 //other browser not tested on IE 11
+                    sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tblhtml));
+
+                return (sa);
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+</script>
+<div style="display: none; position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 1000; background: rgba(0,0,0,0.5)" id="loader">
+    <img alt="" src="~/fonts/ajax-loader-6.gif" style="top: 50%; left: 50%; position: absolute; text-align: center;" />
+</div>
+<div id="page-wrapper">
+    <div class="graphs">
+        <div class="md">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            <h4 style="font-family: bookman old style; font-weight: bold;">User Type</h4>
+                            <button type="button" id="exportexcel10" class="btn btn-xs btn-primary" onclick="UserTypeExportExcel()" style="width: 90px; margin-left: 10px">Export</button>
+                        </div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-2"></div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-6">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-8"></div>
+                            </div>
+                            <div class="col-md-6"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <br />
+                        <div class="table-responsive" id="divMyUser" style="margin-left: 17px;">
+                            <table class="table table-bordered ReportTable" id="tblUserDetail">
+                                <thead id="theadmydata"></thead>
+                                <tbody id="tbodymydata"></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

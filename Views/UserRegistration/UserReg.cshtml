@@ -1,0 +1,191 @@
+﻿@{
+    ViewBag.Title = "UserReg";
+    Layout = "~/Views/Shared/_DashBoard.cshtml";
+}
+
+@{var listItems = new List<System.Web.UI.WebControls.ListItem>
+    {
+          new System.Web.UI.WebControls.ListItem { Text = "ADMIN", Value="1" }, 
+          new System.Web.UI.WebControls.ListItem { Text = "MANAGER", Value="4" } ,
+          new System.Web.UI.WebControls.ListItem { Text = "SALES", Value="2" } ,
+          new System.Web.UI.WebControls.ListItem { Text = "CUSTOMER", Value="3" }
+    };
+}
+
+@{var status = new List<System.Web.UI.WebControls.ListItem>
+    {
+          new System.Web.UI.WebControls.ListItem { Text = "OPEN", Value="1" }, 
+          //new System.Web.UI.WebControls.ListItem { Text = "PENDING", Value="2" } ,
+          new System.Web.UI.WebControls.ListItem { Text = "CLOSED", Value="3" }
+    };
+}
+
+<script type="text/javascript">
+    function AddReg() {
+        //alert('hello');
+        window.location.href = '@Url.Action("AddUserReg", "AddUserRegistration")';
+    }
+
+    function ReadUser(UserId) {
+        window.location.href = "/AddUserRegistration/AddUserReg?UserId=" + UserId + ""
+    }
+    function GetUserDetails() {
+        $("#loader").show();
+        var _UserType = $('#ddlUserType').val();
+        var _txtSAPID = $('#txtSAPID').val();
+        var _txtUserID = $('#txtUserID').val();
+        var _txtUserName = $('#txtUserName').val();
+        var _ddlStatus = $('#ddlStatus').val();
+        $.ajax({
+            url: "/UserRegistration/GetUserDetails",
+            type: "POST",
+            data: JSON.stringify({ 'sUserType': _UserType, 'sSapId': _txtSAPID, 'sUserName': _txtUserName, 'sStatus': _ddlStatus, 'sUserID': _txtUserID }),
+            dataType: "json",
+            traditional: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                debugger;
+                $('#theadmydata').empty();
+                $('#tbodymydata').empty();
+                var rowhead = "<tr style='background: rgba(158, 158, 158, 0.13)'><th>User Code</th><th>User Name</th><th>User Type</th><th>SAP Id</th><th>Status</th><th>Is Active</th><th>#</th>";
+                var rowbody = '';
+                if (data.length > 0) { 
+                    for (var i = 0; i < data.length; i++) {
+                        rowbody += "<tr><td style='width:15%'>" +
+                           data[i].USER_CODE + "</td><td style='width:25%'>" +
+                           data[i].F_NAME + ' ' + data[i].M_NAME + ' ' + data[i].L_NAME + "</td><td style='width:15%'>" +
+                           data[i].USER_TYPE + "</td><td style='width:15%'>" +
+                           data[i].SAP_ID + "</td><td style='width:15%'>" +
+                           data[i].USER_STATUS_NAME + "</td><td style='width:15%'>" +
+                           data[i].IsActive + "</td><td style='width:10%'><a class='btn btn-outline btn-primary btn-xs' title='Edit' onclick='return ReadUser(" + data[i].USERID + ");' ><i class='fa fa-edit'></i></a></td></tr>";
+                    }
+                    $("#loader").hide();
+                }
+                else {
+                    rowbody = "<td colspan=10> No Record Found </td>"
+                    $("#loader").hide();
+                }
+                $('#theadmydata').html(rowhead);
+                $('#tbodymydata').html(rowbody);
+
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+                $("#loader").hide();
+            }
+        });
+    }
+</script>
+
+<div style="display: none; position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 1000; background: rgba(0,0,0,0.5)" id="loader">
+    <img alt="" src="~/fonts/ajax-loader-6.gif" style="top: 50%; left: 50%; position: absolute; text-align: center;" />
+</div>
+<div id="page-wrapper"> 
+    <div class="graphs">
+        <div class="md">
+            @*Account Information Area   *@
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                            <div class="col-md-4">
+                                <h4 style="font-family: bookman old style; font-weight: bold;">User Registration</h4>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-8">
+                                </div>
+                            </div>
+                            <div class="col-md-6"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <!---->
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">Select User Type</label>
+                                </div>
+                                <div class="col-md-4">                                    
+                                    @Html.DropDownList("ddlUserType", new SelectList(listItems, "Value", "Text"), "- Select User Type -", new { @class = "form-control"})
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">SAP ID</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("txtSAPID", null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <!-- One row -->
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">User Name</label>
+                                </div>
+                                <div class="col-md-4"> 
+                                         @Html.TextBox("txtUserName", null, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">User ID</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("txtUserID", null, new { @class = "form-control" })
+                                </div>                                
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">Status</label>
+                                </div>
+                                <div class="col-md-4"> 
+                                     @Html.DropDownList("ddlStatus", new SelectList(status, "Value", "Text"), "- Select Status -", new { @class = "form-control"})
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div> 
+                        <div class="row MarginTop1" style="margin-top: 10px">
+                            <div class="col-md-9">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-5">
+                                    <button type="button" id="btnGo" class="btn btn-xs btn-primary" onclick="return GetUserDetails();" style="width: 50px;font-family:Arial;">Go</button>
+                                    <button type="button" id="btnAddUserReg" class="btn btn-xs btn-success warning_4" onclick="AddReg();" style="width: 100px;font-family:Arial;">Add New User</button>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <br />
+                        <div class="table-responsive" id="divMyUser" style="margin-left: 17px;">
+                            <table class="table table-bordered ReportTable" id="tblUserDetail">
+                                <thead id="theadmydata"></thead>
+                                <tbody id="tbodymydata"></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+

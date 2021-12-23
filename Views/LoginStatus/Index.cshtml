@@ -1,0 +1,150 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashBoard.cshtml";
+}
+
+<script type="text/javascript">
+    function GetReportExcel() {
+        //debugger;
+        //alert('hello');
+        LoginStatusExcel();
+    }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetLoginUserDetails();
+    });
+
+    function GetLoginUserDetails() {
+        $("#loader").show();
+        //debugger;
+        $.ajax({
+            url: "/LoginStatus/GetLoginUserDetails",
+            type: "POST",
+            data: JSON.stringify({}),
+            dataType: "json",
+            traditional: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                debugger;
+                $('#theadmydata').empty();
+                $('#tbodymydata').empty();
+                var rowhead = "<tr style='background: rgba(158, 158, 158, 0.13)'><th>Login Id</th><th>User Name</th><th>User Type</th><th>SAP Id</th><th>Status</th><th>Login Status</th><th>Last Login Date</th>";
+                var rowbody = '';
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        rowbody += "<tr><td style='width:15%'>" +
+                           data[i].USER_CODE + "</td><td style='width:25%'>" +
+                           data[i].F_NAME + ' ' + data[i].M_NAME + ' ' + data[i].L_NAME + "</td><td style='width:15%'>" +
+                           data[i].USER_TYPE + "</td><td style='width:15%'>" +
+                           data[i].SAP_ID + "</td><td style='width:15%'>" +
+                           data[i].USER_STATUS_NAME + "</td><td style='width:15%'>" +
+                           data[i].IsActive + "</td><td style='width:15%'>" +
+                        data[i].lastlogin + "</td></tr>";
+                    }
+                    $("#loader").hide();
+                }
+                else {
+                    rowbody = "<td colspan=10> No Record Found </td>"
+                    $("#loader").hide();
+                }
+                $('#theadmydata').html(rowhead);
+                $('#tbodymydata').html(rowbody);
+
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+                $("#loader").hide();
+            }
+        });
+    }
+    function LoginStatusReportExcel() {
+        debugger;
+        $.ajax({
+            url: "/LoginStatus/GetLoginUserDetails",
+            type: "POST",
+            data: JSON.stringify({}),
+            dataType: "json",
+            traditional: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                var tblhtml = "<table border='1'><thead><tr><th>Login Id</th><th>User Name</th><th>User Type</th><th>SAP Id</th><th>Status</th><th>Login Status</th><th>Last Login Date</th></tr></thead>";
+                tblhtml = tblhtml + "<tbody>";
+                for (index = 0; index < data.length; index++) {
+                    tblhtml = tblhtml + "<tr><td>" +
+                        data[index].USER_CODE + "</td><td style='width:25%'>" +
+                           data[index].F_NAME + ' ' + data[index].M_NAME + ' ' + data[index].L_NAME + "</td><td style='width:15%'>" +
+                           data[index].USER_TYPE + "</td><td style='width:15%'>" +
+                           data[index].SAP_ID + "</td><td style='width:15%'>" +
+                           data[index].USER_STATUS_NAME + "</td><td style='width:15%'>" +
+                           data[index].IsActive + "</td><td style='width:15%'>" +
+                        data[index].lastlogin + "</td></tr>";
+                }
+                tblhtml = tblhtml + "</tbody></table>";
+                console.log(tblhtml);
+
+                var ua = window.navigator.userAgent;
+                var msie = ua.indexOf("MSIE");
+                if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+                {
+                    tblMyReports.document.open("txt/html", "replace");
+                    tblMyReports.document.write(tblhtml);
+                    tblMyReports.document.close();
+                    tblMyReports.focus();
+                    sa = divReport.document.execCommand("SaveAs", false, "LoggedInStatusReport.xls");
+
+
+                }
+                else                 //other browser not tested on IE 11
+                    sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tblhtml));
+
+                return (sa);
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+</script>
+
+<div style="display: none; position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 1000; background: rgba(0,0,0,0.5)" id="loader">
+    <img alt="" src="~/fonts/ajax-loader-6.gif" style="top: 50%; left: 50%; position: absolute; text-align: center;" />
+</div>
+
+<div id="page-wrapper">
+    <div class="graphs">
+        <div class="md">
+            @*Account Information Area   *@
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            <h4 style="font-family: bookman old style; font-weight: bold;">Logged in user status</h4>
+                            <button type="button" id="exportexcel10" class="btn btn-xs btn-primary" onclick="LoginStatusReportExcel()" style="width: 90px; margin-left: 10px">Get To Excel</button>
+                        </div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-2"></div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-6">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-8"></div>
+                            </div>
+                            <div class="col-md-6"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <br />
+                        <div class="table-responsive" id="divMyUser" style="margin-left: 17px;">
+                            <table class="table table-bordered ReportTable" id="tblUserDetail">
+                                <thead id="theadmydata"></thead>
+                                <tbody id="tbodymydata"></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

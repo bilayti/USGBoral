@@ -1,0 +1,168 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<style type="text/css">
+    .Required {
+    border-left:3px solid red;
+    }
+</style>
+
+<script src="~/js/MyCustome.js"></script>
+<script type="text/javascript">
+    function Validate() {
+        var x = ValidateTxtBox('Required');
+        if (!x)
+            return false;
+        var password = $("#txtNewPass").val();
+        var confirmPassword = $("#txtConfirmPass").val();
+        if (password != confirmPassword) {
+            alert("Passwords do not match.");
+            return false;
+        }
+        //return true;
+        ChangePassword();
+    }
+
+    function ChangePassword() {
+        debugger;
+        alert('susss');
+        //return false
+        $.ajax({
+            type: "POST",
+            url: "/ForgetPass/ChangePassword",
+            data: "{'UserId':'" + $("#txtUserId").val() +
+                "','NewPassword':'" + $("#txtNewPass").val() + "'}",
+            contentType: "application/json;charset=utf-8",
+            datatype: "json",
+            success: function (data) {
+                if (data.toString() == "1") {
+                    alert('Password Changed Successfully');
+                    ClearControl();
+                    //window.location.reload();
+                }
+                else {
+                    alert('User Id Not Exit');
+                }
+            },
+            error: function () {
+                alert('A');
+            }
+        });
+    }
+
+    function ClearControl() {
+        $('#txtUserId').val('');
+        $('#txtNewPass').val('');
+        $('#txtConfirmPass').val('');
+
+        _UserId = 0;
+    }
+
+</script>
+
+<div id="page-wrapper"> 
+    <div class="graphs">
+        <div class="md">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                            <div class="col-md-4">
+                                <h4 style="font-family: bookman old style; font-weight: bold;">Change Password</h4>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-8">
+                                </div>
+                            </div>
+                            <div class="col-md-6"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <!---->                        
+                        <!-- One row -->
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">User Id</label>
+                                </div>
+                                <div class="col-md-4"> 
+                                         @Html.TextBox("txtUserId", null, new { @class = "form-control Required" })
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-4">
+                                </div>                                
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+
+                        <!-- Two row -->
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">New Password</label>
+                                </div>
+                                <div class="col-md-4"> 
+                                         @Html.Password("txtNewPass", null, new { @class = "form-control Required" })
+                                </div>
+                                <div class="col-md-2">
+                                    <span id='message'></span>
+                                </div>
+                                <div class="col-md-4">
+                                </div>                                
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+
+                        <!-- Three row -->
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">Confirm Password</label>
+                                </div>
+                                <div class="col-md-4"> 
+                                         @Html.Password("txtConfirmPass", null, new { @class = "form-control Required" })
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-4">
+                                </div>                                
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                         
+                        <div class="row MarginTop1" style="margin-top: 10px">
+                            <div class="col-md-9">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-5">
+                                    <button type="button" id="btnGo" class="btn btn-xs btn-primary" onclick="return Validate();">Change Password</button>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <br />
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+

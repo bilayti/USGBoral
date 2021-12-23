@@ -1,0 +1,561 @@
+﻿@{
+    ViewBag.Title = "AddUserReg";
+    Layout = "~/Views/Shared/_DashBoard.cshtml";
+}
+
+@{var listItems = new List<System.Web.UI.WebControls.ListItem>
+    {
+         new System.Web.UI.WebControls.ListItem { Text = "ADMIN", Value="1" }, 
+          new System.Web.UI.WebControls.ListItem { Text = "MANAGER", Value="4" } ,
+          new System.Web.UI.WebControls.ListItem { Text = "SALES", Value="2" } ,
+          new System.Web.UI.WebControls.ListItem { Text = "CUSTOMER", Value="3" }
+    };
+}
+
+@{var status = new List<System.Web.UI.WebControls.ListItem>
+    {
+          new System.Web.UI.WebControls.ListItem { Text = " -- Select -- ", Value="0" },
+          new System.Web.UI.WebControls.ListItem { Text = "OPEN", Value="1" },
+          //new System.Web.UI.WebControls.ListItem { Text = "PENDING", Value="2" } ,
+          new System.Web.UI.WebControls.ListItem { Text = "CLOSED", Value="3" }
+    };
+}
+
+<style type="text/css">
+    .Required {
+        border-left: 3px solid red;
+    }
+
+    .DDLRequired {
+        border-left: 3px solid red;
+    }
+</style>
+
+<div id="page-wrapper">
+    <div class="graphs">
+        <div class="md">
+            @*Account Information Area   *@
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+
+                        <div class="col-md-4">
+                            <h4 style="font-family: bookman old style; font-weight: bold;">User Registration Details</h4>
+                        </div>
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-8">
+                                </div>
+                            </div>
+                            <div class="col-md-6"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <!---->
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">Select User Type</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select id="ddlUserType" class="form-control DDLRequired">
+                                        <option value="0">-- Select --</option>
+                                        <option value="1">ADMIN</option>
+                                        <option value="4">MANAGER</option>
+                                        <option value="2">SALES</option>
+                                        <option value="3">CUSTOMER</option>
+                                        <option></option>
+                                    </select>
+                                    @*@Html.DropDownList("", new SelectList(listItems, "Value", "Text"), new { @class = "" })*@
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">User ID</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("txtUserID", null, new { @class = "form-control Required" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <!-- One row -->
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">First Name</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" id="txtFirstName" class="form-control Required" />
+                                    @*@Html.TextBox("txtFirstName", null, new { @class = "form-control" })*@
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="control-label">Middle Name</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" id="txtMiddleName" class="form-control" />
+                                    @*@Html.TextBox("txtMiddleName", null, new { @class = "form-control" })*@
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <!--Second Row -->
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">Last Name</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" id="txtLastName" class="form-control" />
+                                    @*@Html.TextBox("txtLastName", null, new { @class = "form-control" })*@
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Password</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.Password("txtPassword", null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">Email Id</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("txtEmailId", null, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Confirm Password</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.Password("txtConfirmPassword", null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">Mobile No.</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("txtMobileNo", null, new { @class = "form-control" })
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="control-label">Remarks</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("txtRemarks", null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">SAP ID</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("txtSAPID", null, new { @class = "form-control Required" })
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Status</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.DropDownList("ddlStatus", new SelectList(status, "Value", "Text"), "- Select Status -", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">Is Active</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.CheckBox("chkIsActive")
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="col-md-4">
+                            <h4 style="font-family: bookman old style; font-weight: bold;">Report Authorization</h4>
+                        </div>
+                        <!-- Add Check Box For User Authorization-->
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-3">
+                                    <label class="control-label">Aging Report</label>
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.CheckBox("chkAging")
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Pending Order Report</label>
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.CheckBox("chkPending")
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-3">
+                                    <label class="control-label">Item Purchase Report</label>
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.CheckBox("chkItemP")
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Invoice Report</label>
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.CheckBox("chkInvoice")
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-3">
+                                    <label class="control-label">Account Statement</label>
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.CheckBox("chkAccount")
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Collection Summary</label>
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.CheckBox("chkCollection")
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-3">
+                                    <label class="control-label">Credit Note Report</label>
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.CheckBox("chkCreditN")
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+
+                        <div class="row MarginTop1" style="margin-top: 10px">
+                            <div class="col-md-9">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" id="btnSave" class="btn btn-xs btn-primary" style="width: 50px;font-family:Arial;" onclick="return AddUserRegistrations();">Save</button>
+                                    <button type="button" id="btnUpdate" class="btn btn-xs btn-primary" style="width: 50px;font-family:Arial;" onclick="return AddUserRegistrations();">Update</button>
+                                    <button type="button" id="btnBacktoSearch" class="btn btn-xs btn-primary" style="width: 100px;font-family:Arial;">Back to Search</button>
+                                    <button type="button" id="btnCancel" class="btn btn-xs btn-success warning_4" style="width: 50px;font-family:Arial;">Cancel</button>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/MyCustome.js"></script>
+<script type="text/javascript">
+    var _UserId = 0;
+    $(document).ready(function () {
+        var pathname = window.location.href;
+        if (pathname.indexOf('=') != -1) {
+            pathname = pathname.split("=")
+            if (pathname[1] > 0) {
+                $("#btnUpdate").show();
+                $("#btnSave").hide();
+                $('#btnBacktoSearch').show();
+                _UserId = pathname[1];
+                FillUserDetail(_UserId);
+                $('#txtConfirmPassword').prop("disabled", true)
+                $('#txtPassword').prop("disabled", true)
+            }
+        }
+        else {
+            $("#btnSave").show();
+            $("#btnUpdate").hide();
+            $('#btnBacktoSearch').show();
+            $('#txtConfirmPassword').prop("enabled", true)
+            $('#txtPassword').prop("enabled", true)
+        }
+    });
+
+    //Find Customer Name
+    function FillUserDetail(_UserId) {
+        debugger;
+        $.ajax({
+            url: "/AddUserRegistration/FillUserDetail",
+            type: "POST",
+            data: JSON.stringify({ 'sUserID': _UserId }),
+            dataType: "json",
+            traditional: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.length > 0) {
+                    $('#ddlUserType').val(data[0].USER_TYPEID)
+                    $('#txtUserID').val(data[0].USER_CODE)
+                    $('#txtFirstName').val(data[0].F_NAME)
+                    $('#txtMiddleName').val(data[0].M_NAME)
+                    $('#txtLastName').val(data[0].L_NAME)
+                    //$('#txtPassword').val(data[0].PASSWORD1)
+                    //$('#txtConfirmPassword').val(data[0].PASSWORD1)
+                    $('#txtEmailId').val(data[0].EMAIL)
+                    $('#txtMobileNo').val(data[0].MOBILE)
+                    $('#txtSAPID').val(data[0].SAP_ID)
+                    $('#ddlStatus').val(data[0].USER_STATUS)
+                    $('#txtRemarks').val(data[0].REMARKS1)
+                    if (data[0].IsActive == "Y") {
+                        $('#chkIsActive').prop('checked', true);
+                    }
+                    else {
+                        $('#chkIsActive').prop('checked', false);
+                    }
+
+
+                    if (data[0].Aging == "Y") {
+                        $('#chkAging').prop('checked', true);
+                    }
+                    else {
+                        $('#chkAging').prop('checked', false);
+                    }
+                    if (data[0].PendingOrder == "Y") {
+                        $('#chkPending').prop('checked', true);
+                    }
+                    else {
+                        $('#chkPending').prop('checked', false);
+                    }
+                    if (data[0].ItemPurchase == "Y") {
+                        $('#chkItemP').prop('checked', true);
+                    }
+                    else {
+                        $('#chkItemP').prop('checked', false);
+                    }
+                    if (data[0].Invoice == "Y") {
+                        $('#chkInvoice').prop('checked', true);
+                    }
+                    else {
+                        $('#chkInvoice').prop('checked', false);
+                    }
+                    if (data[0].AccountStatement == "Y") {
+                        $('#chkAccount').prop('checked', true);
+                    }
+                    else {
+                        $('#chkAccount').prop('checked', false);
+                    }
+                    if (data[0].CollectionSUmmary == "Y") {
+                        $('#chkCollection').prop('checked', true);
+                    }
+                    else {
+                        $('#chkCollection').prop('checked', false);
+                    }
+                    if (data[0].CreditNote == "Y") {
+                        $('#chkCreditN').prop('checked', true);
+                    }
+                    else {
+                        $('#chkCreditN').prop('checked', false);
+                    }
+                }
+                else {
+                    alert("No Record Found");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    //Add User Registration Details Form
+
+    function AddUserRegistrations() {
+        debugger;
+        var x = ValidateTxtBox('Required');
+        var y = ValidateDropDown('DDLRequired');
+        if (!x || !y)
+            return false;
+        //alert('susss');
+        //return false
+        var chkActive = '';
+        if ($('#chkIsActive').is(":checked")) {
+            chkActive = 'Y'
+        } else {
+            chkActive = 'N'
+        }
+        $.ajax({
+            type: "POST",
+            url: "/AddUserRegistration/UserRegDetails",
+            data: "{'USERID':'" + _UserId + "','USER_TYPEID':'" + $("#ddlUserType").val() + "','USER_CODE':'" + $("#txtUserID").val() + "','F_NAME':'" + $("#txtFirstName").val() + "','M_NAME':'" + $("#txtMiddleName").val() + "','L_NAME':'" + $("#txtLastName").val() +
+                "','PASSWORD1':'" + $("#txtPassword").val() +
+                "','EMAIL':'" + $("#txtEmailId").val() +
+                "','MOBILE':'" + $("#txtMobileNo").val() +
+                "','REMARKS1':'" + $("#txtRemarks").val() +
+                "','SAP_ID':'" + $("#txtSAPID").val() +
+                "','IsActive':'" + chkActive +
+                "','USER_STATUS':'" + $("#ddlStatus").val() + "'}",
+            contentType: "application/json;charset=utf-8",
+            datatype: "json",
+            success: function (data) {
+                if (data.toString() == "Updated successfully !") {
+                    AddUserAuthorization();
+                    ClearControl();
+                }
+                else {
+                    alert('Updated successfully !');
+                    ClearControl();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function AddUserAuthorization() {
+        debugger;
+        var chkAging = '';
+        var chkPending = '';
+        var chkItem = '';
+        var chkInvoice = '';
+        var chkAccount = '';
+        var chkCollection = '';
+        var chkCredit = '';
+        if ($('#chkAging').is(":checked")) {
+            chkAging = 'Y'
+        } else {
+            chkAging = 'N'
+        }
+        if ($('#chkPending').is(":checked")) {
+            chkPending = 'Y'
+        } else {
+            chkPending = 'N'
+        }
+        if ($('#chkItemP').is(":checked")) {
+            chkItem = 'Y'
+        } else {
+            chkItem = 'N'
+        }
+        if ($('#chkInvoice').is(":checked")) {
+            chkInvoice = 'Y'
+        } else {
+            chkInvoice = 'N'
+        }
+        if ($('#chkAccount').is(":checked")) {
+            chkAccount = 'Y'
+        } else {
+            chkAccount = 'N'
+        }
+        if ($('#chkCollection').is(":checked")) {
+            chkCollection = 'Y'
+        } else {
+            chkCollection = 'N'
+        }
+        if ($('#chkCreditN').is(":checked")) {
+            chkCredit = 'Y'
+        } else {
+            chkCredit = 'N'
+        }
+        $.ajax({
+            type: "POST",
+            url: "/AddUserRegistration/UserAuthorization",
+            data: "{'USERID':'" + _UserId + "','Aging':'" + chkAging + "','PendingOrder':'" + chkPending + "','ItemPurchase':'" + chkItem +
+                "','Invoice':'" + chkInvoice + "','AccountStatement':'" + chkAccount + "','CollectionSUmmary':'" + chkCollection + "','CreditNote':'" + chkCredit + "'}",
+            contentType: "application/json;charset=utf-8",
+            datatype: "json",
+            success: function (data) {
+                if (data.toString() == "Successfully Saved!") {
+                    alert('Saved Successfully');
+                    ClearControl();
+                    //window.location.reload();
+                }
+                else {
+                    alert('Already Exist');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function ClearControl() {
+        $('#ddlUserType').val('');
+        $('#txtUserID').val('');
+        $('#txtFirstName').val('');
+        $('#txtMiddleName').val('');
+        $('#txtLastName').val('');
+        $('#txtPassword').val('');
+        $('#txtConfirmPassword').val('');
+        $('#txtEmailId').val('');
+        $('#txtMobileNo').val('');
+        $('#txtSAPID').val('');
+        $('#ddlStatus').val('');
+        $('#txtRemarks').val('');
+        $('#chkIsActive').prop('checked', false);
+        $("#btnSave").show();
+        $("#btnUpdate").hide();
+        $('#btnBacktoSearch').hide();
+
+        $('#chkAging').prop('checked', false);
+        $('#chkPending').prop('checked', false);
+        $('#chkItemP').prop('checked', false);
+        $('#chkInvoice').prop('checked', false);
+        $('#chkAccount').prop('checked', false);
+        $('#chkCollection').prop('checked', false);
+        $('#chkCreditN').prop('checked', false);
+        _UserId = 0;
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnCancel').click(function (e) {
+            location.href = '@Url.Content("~/HomePage/Home")';
+        });
+        $('#btnBacktoSearch').click(function (e) {
+            location.href = '@Url.Content("~/UserRegistration/UserReg")';
+        });
+    });
+</script>
+

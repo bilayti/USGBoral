@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Audit Log";
+    Layout = "~/Views/Shared/_DashBoard.cshtml";
+}
+
+<h2>View Audit Log</h2>
+<div style="display: none; position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 1000; background: rgba(0,0,0,0.5)" id="loader">
+    <img alt="" src="~/fonts/ajax-loader-6.gif" style="top: 50%; left: 50%; position: absolute; text-align: center;" />
+</div>
+<div id="page-wrapper">
+    <div class="graphs">
+        <div class="md">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            <h4 style="font-family: bookman old style; font-weight: bold;">View Audit Log</h4>
+                        </div>
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-8">
+                                </div>
+                            </div>
+                            <div class="col-md-6"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <!---->
+                        <div class="row MarginTop1">
+                            <div class="col-md-2" style="margin-left: 0%">
+
+                                <label class="control-label">User&nbsp; Type</label>
+                            </div>
+                            <div class="col-md-10">
+                                <select id="ddlUserType" class="form-control DDLRequired">
+                                    <option value="0">-- Select --</option>
+                                    <option value="1">ADMIN</option>
+                                    <option value="4">MANAGER</option>
+                                    <option value="2">SALES</option>
+                                    <option value="3">CUSTOMER</option>
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+                        <div class="row MarginTop1" style="margin-top: 10px">
+                            <div class="col-md-9">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-5">
+                                    <button type="button" id="btnSubmit" class="btn btn-xs btn-primary" onclick="return GetUserDetails();" style="width: 100px; font-family: Arial;">View</button>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <br />
+                        <div class="table-responsive" id="divMyUser" style="margin-left: 17px;">
+                            <table class="table table-bordered ReportTable" id="tblUserDetail">
+                                <thead id="theadmydata"></thead>
+                                <tbody id="tbodymydata"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

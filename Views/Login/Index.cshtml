@@ -1,0 +1,134 @@
+﻿@{
+    Layout = null;
+}
+
+@{var listItems = new List<System.Web.UI.WebControls.ListItem>
+    {
+          new System.Web.UI.WebControls.ListItem { Text = "Admin", Value="1" }          
+    };
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="css/style1.css">
+    <style type="text/css">
+        .Required111 {
+            border-left: 5px solid red;
+        }
+    </style>
+    <style type="text/css">
+        #btnLogin {
+            background-color: #56575b;
+            font-weight: bold;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrap">
+        <img src="~/icons/Picture1.jpg" width="100%" height="50px" style="position: relative;" />
+        <div class="login-html">
+            <center><input id="tab-1" type="radio" name="tab" class="sign-in"  checked><label for="tab-1" class="tab">USG BORAL<span style="font-family:'Buxton Sketch';font-size:23px;"> ONLINE !</span></label></center>
+            <div class="login-form">
+                <div class="sign-in-htm">
+                    <div class="group">
+                        @*<label for="user" class="label">Username</label>*@
+                        <input type="text" class="input" id="txtUserId" placeholder="Enter user name" style="border-left: 5px solid red;" />
+                        
+                    </div>
+                    <div class="group">
+                        @*<label for="pass" class="label">Password</label>*@
+                        <input type="password" class="input" id="txtPassword" placeholder="Enter user password" style="border-left: 5px solid red;" />
+
+                    </div>
+                    <div class="group">
+                        <input type="button" id="btnLogin" class="button" onclick="validateClient()" value="Login">
+                    </div>
+                    <div class="foot-lnk" style="color: white;">
+                        @*  @Html.ActionLink("Forgot Password", "Index", "ForgetPass", null) *@
+                        <a href="#forgot">Forgot Password?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/dfs.gis.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(document).keyup(function (event) {
+                var key = event.keyCode || event.charCode || 0;
+                if (key == 13) { // "Enter"
+                    $("#btnLogin").click();
+                }
+            });
+        });
+
+        //Get Login
+        function validateClient() {
+            var errormsg = '';
+            var _txtName = document.getElementById('txtUserId').value;
+            var _txtMobile = document.getElementById('txtPassword').value;
+
+            if (_txtName.trim() == "") {
+                errormsg = errormsg + '\n' + 'please enter user name';
+            }
+            else if (_txtMobile.trim() == "") {
+                errormsg = errormsg + '\n' + 'please enter password';
+            }
+            if (errormsg != '') {
+                alert(errormsg);
+                return false;
+            }
+            GetLogin();
+        }
+
+        function GetLogin() {
+            $.ajax({
+                url: "/Login/GetLogin",
+                type: "POST",
+                data: JSON.stringify({ 'UserId': $('#txtUserId').val(), 'Password': $('#txtPassword').val() }),
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.length > 0) {
+                        var UserType = data[0].USER_TYPEID;
+                        window.location.href = "Agree?AX13OTP=" + UserType + ',' + data[0].SAP_ID;
+                    }
+                    else {
+                        alert("User not Exists!");
+                    }
+                },
+                error: function () {
+                    alert("An error has occured!!!");
+                }
+            });
+        }
+
+    </script>
+    <script type="text/javascript">
+        function ComputeHash() {
+            var txtLoginId = document.getElementById('<%= txtLoginId.ClientID %>');
+            var txtPassword = document.getElementById('<%= txtPassword.ClientID %>');
+            var hfSalt = document.getElementById('<%= hfSalt.ClientID %>');
+            if (txtLoginId.value != '') {
+                txtPassword.value = Sha256(hfSalt.value + Sha256(txtPassword.value));
+                hfSalt.value = '';
+            }
+
+        }
+
+        function ClearPwd() {
+            document.getElementById('<%= txtLoginId.ClientID %>').value = '';
+            document.getElementById('<%= txtPassword.ClientID %>').value = '';
+            document.getElementById('<%= hfSalt.ClientID %>').value = '';
+            return;
+        }
+    </script>
+</body>
+</html>
+

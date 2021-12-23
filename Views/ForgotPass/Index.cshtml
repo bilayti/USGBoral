@@ -1,0 +1,267 @@
+﻿@model NewApp.Models.ChangePassword
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Change Password</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="../js/dfs.gis.js"></script>
+    <!-- Custom CSS -->
+    <link href="~/css/style.css" rel="stylesheet" />
+    <!-- Nav CSS -->
+    <link href="~/css/custom.css" rel="stylesheet" />
+    <!-- Graph CSS -->
+    <link href="~/css/lines.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <!----webfonts--->
+    <!-- jQuery -->
+    <script src="~/js/jquery.min.js"></script>
+    <link href='//fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900' rel='stylesheet' type='text/css' />
+    <style type="text/css">
+        .Required {
+            border-left: 3px solid red;
+        }
+    </style>
+
+    <script src="~/js/MyCustome.js"></script>
+    <script type="text/javascript">
+        function Validate() {
+            var x = ValidateTxtBox('Required');
+            if (!x)
+                return false;
+            var password = $("#txtNewPass").val();
+            var confirmPassword = $("#txtConfirmPass").val();
+            if (password != confirmPassword) {
+                alert("Passwords do not match.");
+                return false;
+            }
+            //return true;
+            ChangePassword();
+        }
+
+        function ChangePassword() {
+            debugger;
+            $.ajax({
+                url: "/ForgotPass/ChangePassword",
+                type: "POST",
+                data: JSON.stringify({ 'UserId': $('#txtUserId').val(), 'NewPassword': $('#txtNewPass').val() }),
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.toString() == "Saved!") {
+                        ClearControl();
+                        alert('Password Changed Successfully');
+                        window.location.href = '@Url.Action("Logout", "Login")';
+                    }
+                    else {
+                        alert('User Id Not Exit');
+                    }
+                },
+                error: function () {
+                    alert('A');
+                }
+            });
+        }
+
+        function ClearControl() {
+            $('#txtUserId').val('');
+            $('#txtNewPass').val('');
+            $('#txtConfirmPass').val('');
+
+        }
+
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnGoHome').click(function () {
+                debugger;
+                var UserTypeId = $("#UserTypeId").val();
+                console.log(UserTypeId);
+                if (UserTypeId == 1) {
+                    window.location.href = "HomePage/Home";
+                }
+                else if (UserTypeId == 3) {
+                    window.location.href = "UserPage/Index";
+                }
+                else if (UserTypeId == 2) {
+                    window.location.href = "Sale/Index";
+                }
+                else {
+                    window.location.href = "Manager/Index";
+                }
+
+            });
+        });
+    </script>
+    @*<script type="text/javascript">
+        var hiddenFieldStr = '';
+
+        function ComputeHash() {
+
+            //validate password for valid chars.
+            var NewPassword = document.getElementById('<%= txtNewPass.ClientID %>').value;
+            var NewPasswordConfirm = document.getElementById('<%= txtConfirmPass.ClientID %>').value;
+            var lblErrMsg2 = document.getElementById('<%= lblErrMsg.ClientID %>');
+            var hfSalt = document.getElementById('<%= salt.ClientID %>');
+
+            if (ValidatePassword(NewPassword) == false) {
+                //display error msg.
+                lblErrMsg2.innerHTML = 'Password must contain at least one upper case letter, one special character, one numeric number, and length should be at least 8 characters!<br />';
+                return false;
+            }
+
+            if (NewPassword != NewPasswordConfirm) {
+                //display error msg.
+                lblErrMsg2.innerHTML = 'Password and Confirm Password must match!<br />';
+                return false;
+            }
+
+            shaObj = new jsSHA(NewPassword, "ASCII");
+            var passwordHash = shaObj.getHash("SHA-256", "HEX");
+            if (NewPassword.length > 0) {
+                document.getElementById('<%= txtNewPass.ClientID %>').value = passwordHash;
+            }
+
+            //compute confirm password salted hash
+            shaObj = new jsSHA(NewPasswordConfirm, "ASCII");
+            var confirmPasswordHash = shaObj.getHash("SHA-256", "HEX");
+            shaObj = new jsSHA(hfSalt.value + confirmPasswordHash, "ASCII");
+            var confirmPasswordSaltedHash = shaObj.getHash("SHA-256", "HEX");
+            if (NewPasswordConfirm.length > 0) {
+                document.getElementById('<%= txtConfirmPass.ClientID %>').value = confirmPasswordSaltedHash;
+            }
+
+            hfSalt.value = '';
+            //submit form
+            return true;
+        }
+        function ClearPwd() {
+
+
+            document.getElementById('<%= txtNewPass.ClientID %>').value = '';
+            document.getElementById('<%= txtConfirmPass.ClientID %>').value = '';
+
+            //submit form
+            return true;
+        }
+
+        </script>*@
+</head>
+<body>
+    @*<div>
+        <div id="page-wrapper"> *@
+    <center>
+    <div class="graphs" >
+        <div class="md">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                            <div class="col-md-4">
+                                <h4 style="font-family: bookman old style; font-weight: bold;">Change Password</h4>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        <div class="row MarginTop1">
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-8">
+                                </div>
+                            </div>
+                            <div class="col-md-6"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <!---->                        
+                        <!-- One row -->
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">User Id</label>
+                                </div>
+                                <div class="col-md-4"> 
+                                         @Html.TextBox("txtUserId", null, new { @class = "form-control Required" })
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-4">
+                                </div>                                
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+
+                        <!-- Two row -->
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">New Password</label>
+                                </div>
+                                <div class="col-md-4"> 
+                                         @Html.Password("txtNewPass", null, new { @class = "form-control Required" })
+                                </div>
+                                <div class="col-md-2">
+                                    <span id='message'></span>
+                                </div>
+                                <div class="col-md-4">
+                                </div>                                
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+
+                        <!-- Three row -->
+                        <div class="row MarginTop1">
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <label class="control-label">Confirm Password</label>
+                                </div>
+                                <div class="col-md-4"> 
+                                         @Html.Password("txtConfirmPass", null, new { @class = "form-control Required" })
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-4">
+                                </div>                                
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                         
+                        <div class="row MarginTop1" style="margin-top: 10px">
+                            <div class="col-md-9">
+                                @Html.HiddenFor(model=>model.UserTypeId)
+                                @Html.HiddenFor(model=>model.salt)
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-5">
+                                    <button type="button" id="btnGo" class="btn btn-xs btn-primary" onclick="return Validate();">Change Password</button>
+                                    <button type="button" id="btnGoHome" class="btn btn-xs btn-primary">Go to Home</button>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <br />
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </center>
+    @*</div>
+    </div>*@
+</body>
+</html>
