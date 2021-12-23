@@ -1,0 +1,755 @@
+﻿/*LAYOUT RELATED WORK BEGINS*/
+body
+{
+	margin: 0px;
+	padding: 0px;
+	font-family: 'Open Sans' ,sans-serif; /*background-color: #EFE479;*/
+	background: url(   "images/backgroundbody.jpg" ) no-repeat center center;
+	font-size: 13px;
+	color: #010101;
+	font-weight: 400;
+}
+
+
+#Header
+{
+	width: 960px;
+	height: 200px;
+	margin: 0 auto;
+	text-align: left;
+	background-color: #FFFFFF;
+}
+
+#toplogo
+{
+	width: 20px;
+	height: 30px;
+	text-align: left;
+	display: inline-block;
+	float: left;
+	margin-left: 0px;
+	background-color: #FFFFFF;
+	background: url(    "images/flag_new.gif" ); /*background-color: #E2D35E;*/
+	background-repeat: no-repeat;
+	padding: 0px 20px 0px 0px;
+}
+#logoline
+{
+	width: 870px;
+	height: 30px;
+	text-align: left;
+	font-family: 'Open Sans' ,sans-serif;
+	background-color: #FFFFFF;
+	padding: 0px 50px 0px 0px;
+	display: inline-block;
+	float: left;
+	color: #5C5C5C;
+	font-weight: bold;
+}
+#logoemlem
+{
+	width: 60px;
+	height: 100px;
+	display: inline-block;
+	float: left;
+	margin-left: 20px;
+	background-color: #FFFFFF;
+	border-right: dotted 0px #AAAAAA;
+	padding: 30px 20px 0px 20px;
+	background: url(    "images/emblem.png" ) center center; /*background-color: #E2D35E;*/
+	background-repeat: no-repeat;
+}
+#pmlogo
+{
+	width: 150px;
+	height: 120px;
+	display: inline-block;
+	float: left;
+	margin-left: 15px;
+	margin-top:15px;
+	color: #EEEEEE;
+	padding: 20px 14px 0px 0px;
+	background: url(    "images/FINALLogoFinal.jpg" ); /*background-color: #E2D35E;*/
+	background-repeat: no-repeat;
+}
+#Headermain
+{
+	width: 630px;
+	height: 70px;
+	text-align: left;
+	font-size: 250%;
+	font-weight: bold;
+	color: #0066CC;
+	padding: 40px 0px 0px 20px;
+	display: inline-block;
+	float: left;
+	background-color: #FFFFFF;
+}
+
+#MenuMain
+{
+	width: 960px;
+	height: 35px;
+	float: left;
+	text-align: center; /*background: url("images/bg-top-pan.gif" ) repeat-x scroll 0 100% #FFFCD6;*/
+	background-color: #5CADFF;
+	border-bottom: 1px solid #5CADFF;
+	border-top: 1px solid #5CADFF;
+}
+
+#Menu
+{
+	width: 950px;
+	height: 30px;
+	float: left;
+	padding: 3px;
+	text-align: center;
+	font-weight: bold;
+	background-color: #5CADFF;
+}
+
+.button_example
+{
+	border: 1px solid #15aeec;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	font-size: 12px;
+	font-family: arial, helvetica, sans-serif;
+	padding: 10px 10px 10px 10px;
+	text-decoration: none;
+	display: inline-block;
+	text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #49c0f0;
+	background-image: linear-gradient(to bottom, #49c0f0, #2CAFE3);
+}
+
+.button_example:hover
+{
+	border: 1px solid #1090c3;
+	background-color: #1ab0ec;
+	background-image: linear-gradient(to bottom, #1ab0ec, #1a92c2);
+}
+
+.button_reset
+{
+	border: 1px solid #25729a;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	font-size: 12px;
+	font-family: arial, helvetica, sans-serif;
+	padding: 10px 10px 10px 10px;
+	text-decoration: none;
+	display: inline-block;
+	text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #3093c7;
+	background-image: linear-gradient(to bottom, #3093c7, #1c5a85);
+}
+
+.button_reset:hover
+{
+	border: 1px solid #1c5675;
+	background-color: #26759e;
+	background-image: linear-gradient(to bottom, #26759e, #133d5b);
+}
+
+
+.tb4
+{
+	background-image: url(images/form_bg.jpg);
+	background-repeat: repeat-x;
+	border: 1px solid #d1c7ac;
+	width: 170px;
+	color: #333333;
+	padding: 3px;
+	margin-right: 4px;
+	margin-bottom: 8px;
+	font-family: tahoma, arial, sans-serif;
+}
+
+
+
+label
+{
+	float: left;
+	width: 25%;
+	margin-right: 0.5em;
+	padding-top: 0.2em;
+	text-align: left;
+	font-weight: bold;
+	color: #0066CC;
+}
+
+
+
+
+#LogoMain
+{
+	width: 960px;
+	height: auto;
+	float: left;
+	text-align: right;
+	margin: 0 auto;
+	background-color: #EEEEEE;
+}
+
+#Logo
+{
+	width: 960px;
+	height: auto;
+	margin: 0 auto;
+	text-align: left; /*ackground: url(  "images/bg-mid.gif" ) repeat scroll 0 0 #EFE479;*/
+}
+
+#ContentMain
+{
+	width: 960px;
+	height: auto;
+	float: left;
+	text-align: center;
+}
+
+#Content
+{
+	width: 960px;
+	min-height: 400px;
+	margin: 0 auto;
+	float: left;
+	text-align: left;
+	padding-top: 20px; /*background: url("images/bg-mid.gif" ) repeat scroll 0 0 #EFE479;*/
+	background-color: #EEEEEE;
+}
+
+#contentlogo
+{
+	width: 940px;
+	min-height: 400px;
+	margin: 0 auto;
+	float: left;
+	text-align: left;
+	padding-top: 20px;
+	background: url(  "images/PMJDYFINALLogo.jpg" ) center center;
+	background-color: #EEEEEE;
+	background-repeat: no-repeat;
+	opacity: 0.1;
+	filter: alpha(opacity=5);
+}
+
+
+#BeforeFooterMain
+{
+	width: 100%;
+	height: auto;
+	float: left;
+	text-align: center;
+}
+
+#BeforeFooter
+{
+	width: 944px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+
+
+#FooterMain
+{
+	width: 100%;
+	height: auto;
+	float: left;
+	text-align: center; /*background: url(  "images/bg-top-pan.gif" ) repeat-x scroll 0 100% #FFFCD6;     border-bottom: 1px solid #FFFCD6;     border-top: 1px solid #FFFCD6;   */
+}
+
+#Footer
+{
+	width: 944px;
+	margin: 0 auto;
+	text-align: center;
+	background-color: #5CADFF;
+	border-left: solid 8px #B2E0C2;
+	border-right: solid 8px #B2E0C2;
+	line-height: 50%;
+	padding: 5px;
+}
+/*LAYOUT RELATED WORK ENDS*/
+
+
+
+/*STYLING RELATED WORK BEGINS*/
+
+.InputForm label
+{
+	float: left;
+	width: 150px;
+}
+
+.InputForm .radioLabel label
+{
+	float: none;
+	width: auto;
+}
+
+.InputForm
+{
+	width: 400px;
+	height: auto;
+	margin: 0px auto 0px auto;
+	background-color: #B2E0B2;
+	padding: 20px;
+	border-radius: 15px;
+	border-top: solid 4px #0066CC;
+}
+
+
+
+fieldset
+{
+	width: auto;
+	margin: 0px auto;
+	padding: 10px;
+}
+
+legend
+{
+	font-weight: bold;
+}
+
+.RupeeSymbol
+{
+	font-family: "Rupee Foradian";
+}
+
+.InputForm table.ReportTableMain > tr > td
+{
+	border: solid 1px black;
+}
+
+.InputForm table.ReportChildTable, .InputForm table.ReportChildTable td
+{
+	border: none;
+}
+.InputForm table.ReportChildTable td
+{
+	border-bottom: solid 1px black;
+	border-right: solid 1px black;
+}
+
+.InputForm table.ReportChildTable td:last-child
+{
+	border-right: none;
+}
+.InputForm table.ReportChildTable tr:last-child td
+{
+	border-bottom: none;
+}
+
+
+.logo
+{
+	background: url(   "images/national-emblem.gif" ) no-repeat scroll 50% 0 transparent;
+	padding: 57px 0 0;
+	text-align: center;
+	float: left;
+}
+
+/*STYLING RELATED WORK ENDS*/
+
+
+
+/*ASP.NET Menu RELATED WORK BEGINS*/
+
+.AspMenu
+{
+	background-color: #5CADFF;
+}
+
+#Menu a
+{
+	color: #FFFFFF;
+}
+#Menu a:hover
+{
+	color: #C82900;
+}
+
+.StaticMenuItemStyle
+{
+	padding: 5px 5px 5px 5px;
+}
+
+.DynamicMenuItemStyle
+{
+	padding: 5px;
+	background-color: #5CADFF;
+}
+
+.StaticHoverStyle, .DynamicHoverStyle
+{
+	background-color: #0033CC;
+	border-radius: 15px;
+}
+
+.StaticMenuStyle, .DynamicMenuStyle
+{
+	border: 1px solid #5CADFF;
+}
+
+.DynamicMenuStyle
+{
+	background-color: #0033CC;
+}
+
+.StaticSelectedStyle, DynamicSelectedStyle
+{
+	background-color: #0033CC;
+	border-radius: 15px;
+}
+
+/*ASP.NET Menu RELATED WORK ENDS*/
+
+
+/*BANNERS STYLES BEGINS*/
+
+a.bannersIndiaPortal
+{
+	background-image: url(          "images/banner-india-portal.gif" );
+	margin: 0 0 3px;
+}
+
+a.banners
+{
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	display: block;
+	height: 36px;
+	text-decoration: none;
+	text-indent: -20000px;
+	width: 149px;
+}
+
+a
+{
+	background-color: inherit;
+	color: #000000;
+	outline: medium none;
+	text-decoration: none;
+}
+
+a.bannersInner
+{
+	margin: 0 auto 3px;
+	width: 149px;
+}
+
+a.bannersNEGP
+{
+	background-image: url(          "images/banner-negp.jpg" );
+}
+
+a.bannersPublicGrievances
+{
+	background-image: url(          "images/banner-publicgrievances.jpg" );
+}
+
+
+a.bannersPublicGrievances
+{
+	background-image: url(          "images/banner-publicgrievances.jpg" );
+}
+
+a.bannersInvestIndia
+{
+	background-image: url(          "images/banner-InvestIndia.jpg" );
+}
+
+a.bannersInner
+{
+	margin: 0 auto 3px;
+	width: 149px;
+}
+
+a.bannersTender
+{
+	background-image: url(          "images/banner-tenders.gif" );
+}
+/*BANNERS STYLES ENDS*/
+
+
+
+/* OTHER CLASSES STARTS */
+
+ul.HorizontalLinkList
+{
+	display: block;
+	list-style: none;
+}
+
+ul.HorizontalLinkList li
+{
+	float: left;
+	padding: 5px;
+	border: solid 1px orange;
+}
+
+
+a.LinkButtons
+{
+	color: Blue;
+}
+
+a.LinkButtons:hover
+{
+	color: Red;
+	text-decoration: underline;
+}
+.slideshow
+{
+	height: 400px;
+	width: 400px;
+	display: inline-block;
+	float: left;
+	overflow: auto;
+	border-width: 3px;
+	border-style: solid;
+	border-color: Orange;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+}
+
+
+.details
+{
+	height: 500px;
+	width: 900px;
+	display: inline-block;
+	float: left;
+	overflow: auto;
+	border-width: 3px;
+	border-style: solid;
+	border-color: Orange;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+}
+.promo
+{
+	height: 400px;
+	width: 500px;
+	float: right;
+	display: inline-block;
+	overflow: auto;
+	border-width: 3px;
+	border-style: solid;
+	border-color: Orange;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+}
+
+#divbtn
+{
+	height: 100px;
+	width: 100px;
+	float: right;
+	padding: 10px 700px 0 0;
+}
+#divbtnedit
+{
+	height: 100px;
+	width: 100px;
+	float: left;
+	display: inline-block;
+	overflow: auto;
+	padding: 10px 0 0 100px;
+}
+/*modal pop */
+.modalBackground
+{
+	background-color: Gray;
+	filter: alpha(opacity=80);
+	opacity: 0.6;
+	z-index: 10000;
+}
+.roundedcorners
+{
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	-khtml-border-radius: 20px;
+	border-radius: 20px;
+}
+
+/*panel CSS*/
+.confirm-dialog
+{
+	margin: 0px auto;
+	width: 450px;
+	padding-top: 14px;
+	position: relative;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	-khtml-border-radius: 20px;
+	border-radius: 20px;
+}
+.closebutton
+{
+	display: block;
+	left: -5px;
+	width: 35px;
+	text-indent: -1000em;
+	position: absolute;
+	top: -7px;
+	height: 35px;
+}
+
+.confirm-dialog .inner
+{
+	padding-right: 20px;
+	padding-left: 20px;
+	padding-bottom: 11px;
+	float: left;
+	margin: 0px 0px -20px 0px;
+	width: 400px;
+	padding-top: 0px;
+}
+.confirm-dialog .base
+{
+	border-top: #ddd 1px solid;
+	padding-bottom: 4px;
+	margin-left: -11px;
+	margin-right: -11px;
+	padding-top: 4px;
+	text-align: center;
+}
+.baseslide
+{
+	height: 400px;
+	width: 400px;
+	display: inline-block;
+	float: left;
+	overflow: auto;
+	border-width: 3px;
+	border-style: solid;
+	border-color: Orange;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+}
+
+.tooltip
+{
+	border: 2px solid #317082; /* Border width */
+	left: 18px; /* Same as border thickness */
+	top: 0px;
+	position: absolute;
+	width: 400px; /*Width of tooltip content */
+	height: 100px; /* Height of tooltip content */
+	background-color: #FFF; /* Background color */
+	padding: 5px; /* Space between border and content */
+	font-size: 1.0em; /* Font size of content */
+	overflow: auto; /* Hide overflow content */
+	z-index: 1000001;
+}
+
+/*rounded corner*/
+
+/* OTHER CLASSES ENDS */
+/*gridview alternate row*/
+
+.grid
+{
+	border: none;
+}
+
+.grid th
+{
+	background-color: #3093c7;
+	color: #ffffff;
+}
+
+.grid tr:nth-child(even)
+{
+	background-color: #ffffff;
+}
+
+.grid tr:nth-child(odd)
+{
+	background-color: #B2F0FF;
+}
+
+.grid td
+{
+	padding-left: 10px;
+}
+
+.blueRow
+{
+	background-color: #AECFF0;
+	color: Blue;
+}
+.grayRow
+{
+	background-color: #F8F8F8;
+	color: Gray;
+}
+
+.greenRow
+{
+	background-color: #C4FFC4;
+	color: Green;
+}
+
+
+
+
+
+
+.mygridview
+{
+	
+ table-layout: fixed;
+    
+}
+
+
+
+.mygridview th
+{
+	background-color: #3093c7;
+	width:10px;
+    height:50px;
+    word-wrap:break-word;
+}
+
+.mygridview tr:nth-child(even)
+{
+	background-color: #ffffff;
+     width:10px;
+    height:50px;
+    word-wrap:break-word;
+   }
+
+.mygridview tr:nth-child(odd)
+{
+	background-color: #B2F0FF;
+     width:10px;
+    height:50px;
+    word-wrap:break-word;
+   
+}
+
+.mygridview td
+{
+	padding-left: 10px;
+    width:10px;
+    height:50px;
+    word-wrap:break-word;
+}
+
+
+
+
+
+
